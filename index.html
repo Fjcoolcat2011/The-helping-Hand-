@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Helping Hand - MistyMc</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600;700&display=swap');
+        
+        :root {
+            --primary: #0ea5e9;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --darker: #020617;
+            --card: rgba(15, 23, 42, 0.8);
+            --border: rgba(14, 165, 233, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Background */
+        .bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #064e3b 100%);
+            z-index: -1;
+        }
+        
+        /* Header */
+        header {
+            background: rgba(2, 6, 23, 0.9);
+            border-bottom: 2px solid var(--border);
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-family: 'VT323', monospace;
+            font-size: 3rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo::before {
+            content: '🤝 ';
+            -webkit-text-fill-color: initial;
+        }
+        
+        /* Login */
+        .login-box {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+        
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-family: 'VT323', monospace;
+            font-size: 2rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        button {
+            cursor: pointer;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        
+        .btn-main {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: #fff;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .btn-main:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        /* Layout */
+        .container {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .container.active {
+            display: block;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+        
+        .badge.admin {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .badge.member {
+            background: rgba(14, 165, 233, 0.2);
+            color: var(--primary);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+        }
+        
+        .top-actions button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            margin-left: 10px;
+        }
+        
+        .top-actions button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        /* Admin Toggle */
+        .admin-toggle {
+            display: none;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .admin-toggle.active {
+            display: block;
+        }
+        
+        .btn-admin {
+            padding: 12px 30px;
+            background: linear-gradient(90deg, var(--warning), #fbbf24);
+            color: #000;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+        
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            background: var(--card);
+            border: 2px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .admin-panel.active {
+            display: block;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        
+        .admin-header h2 {
+            color: var(--warning);
+            font-family: 'VT323', monospace;
+            font-size: 1.8rem;
+        }
+        
+        .btn-close {
+            width: 35px;
+            height: 35px;
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border-radius: 8px;
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'VT323', monospace;
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+        
+        /* User List */
+        .user-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(2, 6, 23, 0.4);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .user-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .user-row:last-child {
+            border-bottom: none;
+        }
+        
+        .user-name {
+            font-weight: 600;
+        }
+        
+        .user-meta {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        
+        .user-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status.active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .status.warned { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .status.banned { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        
+        .btn-small {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .btn-ban { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .btn-ban:hover { background: #ef4444; color: #fff; }
+        
+        .btn-warn { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .btn-warn:hover { background: #f59e0b; color: #000; }
+        
+        .btn-unban { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .btn-unban:hover { background: #10b981; color: #fff; }
+        
+        /* Logs */
+        .logs {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(2, 6, 23, 0.4);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .log-entry {
+            padding: 8px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .log-time {
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .quick-actions button {
+            padding: 12px;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid var(--border);
+            color: #fff;
+            border-radius: 8px;
+        }
+        
+        .quick-actions button:hover {
+            background: rgba(14, 165, 233, 0.2);
+        }
+        
+        /* Main Content */
+        .content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        @media (max-width: 1000px) {
+            .content { grid-template-columns: repeat(2, 1fr); }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (max-width: 600px) {
+            .content { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        .section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: rgba(14, 165, 233, 0.1);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .section-header h3 {
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .section-body {
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .item {
+            background: rgba(2, 6, 23, 0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .item:hover {
+            border-color: var(--border);
+        }
+        
+        .btn-del {
+            width: 28px;
+            height: 28px;
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border-radius: 6px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-del.show {
+            display: flex;
+        }
+        
+        .btn-del:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+        
+        .empty {
+            text-align: center;
+            color: #64748b;
+            padding: 30px;
+        }
+        
+        /* Admin Controls in Sections */
+        .section-controls {
+            display: none;
+            padding: 15px 20px;
+            border-top: 1px dashed var(--border);
+            background: rgba(245, 158, 11, 0.05);
+        }
+        
+        .section-controls.active {
+            display: block;
+        }
+        
+        .add-box {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .add-box input {
+            flex: 1;
+            margin: 0;
+        }
+        
+        .btn-add {
+            padding: 0 20px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: #fff;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        /* About Section */
+        .about-text {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+        
+        .about-edit {
+            display: none;
+            margin-top: 15px;
+        }
+        
+        .about-edit.active {
+            display: block;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+            margin-bottom: 10px;
+        }
+        
+        .btn-save {
+            padding: 10px 20px;
+            background: var(--secondary);
+            color: #fff;
+            border-radius: 8px;
+        }
+        
+        /* Announcement */
+        .announcement {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.1), transparent);
+            border-left: 4px solid var(--warning);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 12px 12px 0;
+        }
+        
+        .announcement h4 {
+            color: var(--warning);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .announcement-edit {
+            display: none;
+            margin-top: 10px;
+            gap: 10px;
+        }
+        
+        .announcement-edit.active {
+            display: flex;
+        }
+        
+        .announcement-edit input {
+            flex: 1;
+            margin: 0;
+        }
+        
+        .btn-update {
+            padding: 10px 20px;
+            background: var(--warning);
+            color: #000;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer h2 {
+            font-family: 'VT323', monospace;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .footer p {
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 15px 25px;
+            border-radius: 10px;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success { border-color: #10b981; }
+        .toast.error { border-color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="bg"></div>
+    
+    <div class="toast" id="toast">Message</div>
+
+    <header>
+        <div class="logo">The Helping Hand</div>
+    </header>
+
+    <!-- Login -->
+    <div class="login-box" id="loginBox">
+        <h2>Sign In</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button class="btn-main" onclick="login()">Login</button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="user-info">
+                <div class="avatar" id="avatar">👤</div>
+                <div>
+                    <div id="displayName" style="font-weight: 600;">User</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8;" id="displayRole">Member</div>
+                </div>
+                <span class="badge" id="roleBadge">Member</span>
+            </div>
+            <div class="top-actions">
+                <button onclick="refreshData()">🔄 Refresh</button>
+                <button onclick="logout()">🚪 Logout</button>
+            </div>
+        </div>
+
+        <!-- Admin Toggle -->
+        <div class="admin-toggle" id="adminToggle">
+            <button class="btn-admin" onclick="toggleAdmin()">⚡ Admin Panel</button>
+        </div>
+
+        <!-- Admin Panel -->
+        <div class="admin-panel" id="adminPanel">
+            <div class="admin-header">
+                <h2>⚡ Admin Control Center</h2>
+                <button class="btn-close" onclick="toggleAdmin()">✕</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="statTotal">0</div>
+                    <div class="stat-label">Users</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="statOnline">0</div>
+                    <div class="stat-label">Online</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="statBanned">0</div>
+                    <div class="stat-label">Banned</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="statWarned">0</div>
+                    <div class="stat-label">Warned</div>
+                </div>
+            </div>
+
+            <!-- User Management -->
+            <h3 style="margin-bottom: 10px; color: var(--warning);">👥 User Management</h3>
+            <div class="user-list" id="userList"></div>
+
+            <!-- Activity Log -->
+            <h3 style="margin: 20px 0 10px; color: var(--primary);">📋 Recent Activity</h3>
+            <div class="logs" id="logs"></div>
+
+            <!-- Quick Actions -->
+            <h3 style="margin: 20px 0 10px; color: var(--secondary);">⚡ Quick Actions</h3>
+            <div class="quick-actions">
+                <button onclick="toggleMaintenance()">🔧 Maintenance</button>
+                <button onclick="clearLogs()">🗑️ Clear Logs</button>
+                <button onclick="exportData()">📥 Export</button>
+                <button onclick="resetData()" style="color: #ef4444;">⚠️ Reset All</button>
+            </div>
+        </div>
+
+        <!-- Announcement -->
+        <div class="announcement">
+            <h4>📢 Announcement</h4>
+            <div id="annText">Welcome to The Helping Hand!</div>
+            <div class="announcement-edit" id="annEdit">
+                <input type="text" id="annInput" placeholder="New announcement...">
+                <button class="btn-update" onclick="updateAnn()">Update</button>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content">
+            <!-- Members -->
+            <div class="section">
+                <div class="section-header">
+                    <span>👥</span>
+                    <h3>Members</h3>
+                </div>
+                <div class="section-body" id="membersList">
+                    <div class="empty">No members</div>
+                </div>
+                <div class="section-controls" id="membersCtrl">
+                    <div class="add-box">
+                        <input type="text" id="inputMember" placeholder="Add member...">
+                        <button class="btn-add" onclick="addItem('members', 'inputMember')">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coords -->
+            <div class="section">
+                <div class="section-header">
+                    <span>📍</span>
+                    <h3>Coordinates</h3>
+                </div>
+                <div class="section-body" id="coordsList">
+                    <div class="empty">No coordinates</div>
+                </div>
+                <div class="section-controls" id="coordsCtrl">
+                    <div class="add-box">
+                        <input type="text" id="inputCoord" placeholder="X Y Z...">
+                        <button class="btn-add" onclick="addItem('coords', 'inputCoord')">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Farms -->
+            <div class="section">
+                <div class="section-header">
+                    <span>🌾</span>
+                    <h3>Farms</h3>
+                </div>
+                <div class="section-body" id="farmsList">
+                    <div class="empty">No farms</div>
+                </div>
+                <div class="section-controls" id="farmsCtrl">
+                    <div class="add-box">
+                        <input type="text" id="inputFarm" placeholder="Farm name...">
+                        <button class="btn-add" onclick="addItem('farms', 'inputFarm')">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Founders -->
+            <div class="section">
+                <div class="section-header">
+                    <span>👑</span>
+                    <h3>Founders</h3>
+                </div>
+                <div class="section-body" id="foundersList">
+                    <div class="empty">No founders</div>
+                </div>
+                <div class="section-controls" id="foundersCtrl">
+                    <div class="add-box">
+                        <input type="text" id="inputFounder" placeholder="Founder name...">
+                        <button class="btn-add" onclick="addItem('founders', 'inputFounder')">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="section">
+                <div class="section-header">
+                    <span>ℹ️</span>
+                    <h3>Server Info</h3>
+                </div>
+                <div class="section-body" id="infoList">
+                    <div class="empty">No info</div>
+                </div>
+                <div class="section-controls" id="infoCtrl">
+                    <div class="add-box">
+                        <input type="text" id="inputInfo" placeholder="Add info...">
+                        <button class="btn-add" onclick="addItem('info', 'inputInfo')">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About -->
+            <div class="section">
+                <div class="section-header">
+                    <span>🏠</span>
+                    <h3>About Us</h3>
+                </div>
+                <div class="section-body">
+                    <div class="about-text" id="aboutText">Welcome!</div>
+                    <div class="about-edit" id="aboutEdit">
+                        <textarea id="aboutInput"></textarea>
+                        <button class="btn-save" onclick="saveAbout()">Save</button>
+                    </div>
+                </div>
+                <div class="section-controls" id="aboutCtrl">
+                    <div style="color: var(--warning); font-size: 0.8rem; text-transform: uppercase; font-weight: 600;">
+                        ✏️ Admin can edit above
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <h2>MistyMc</h2>
+            <p>Nation / Community</p>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const defaultData = {
+            members: ['Steve', 'Alex', 'Notch'],
+            coords: ['100 64 -200 Spawn', '500 70 300 Base'],
+            farms: ['Wheat Farm', 'Mob Grinder'],
+            founders: ['Founders1', 'CoFounder'],
+            info: ['Version 1.20', 'Hard Mode'],
+            about: 'Welcome to The Helping Hand - MistyMc Nation! We are a community focused on collaboration and building.',
+            announcement: 'Welcome to our community! Check out the coordinates section.',
+            users: [
+                { name: 'Founders1', status: 'active', role: 'admin', joined: '2024-01-01' },
+                { name: 'Steve', status: 'active', role: 'member', joined: '2024-02-01' },
+                { name: 'Alex', status: 'warned', role: 'member', joined: '2024-02-15' }
+            ],
+            logs: [
+                { time: '10:00', text: 'System initialized', icon: '⚙️' }
+            ],
+            maintenance: false
+        };
+
+        let currentUser = null;
+        let isAdmin = false;
+
+        function load() {
+            const saved = localStorage.getItem('helpingHandData');
+            if (!saved) {
+                localStorage.setItem('helpingHandData', JSON.stringify(defaultData));
+                return defaultData;
+            }
+            return JSON.parse(saved);
+        }
+
+        function save(data) {
+            localStorage.setItem('helpingHandData', JSON.stringify(data));
+        }
+
+        function show(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + type;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function login() {
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value;
+            
+            if (!u || !p) {
+                show('Enter credentials', 'error');
+                return;
+            }
+
+            const data = load();
+            
+            if (u === 'Founders1' && p === '1212') {
+                currentUser = u;
+                isAdmin = true;
+                localStorage.setItem('currentUser', u);
+                localStorage.setItem('isAdmin', 'true');
+                
+                // Add to users if not exists
+                if (!data.users.find(x => x.name === u)) {
+                    data.users.push({ name: u, status: 'active', role: 'admin', joined: new Date().toISOString().split('T')[0] });
+                    save(data);
+                }
+                
+                log('login', u);
+                init();
+                show('Welcome Admin!');
+            } else {
+                // Check if banned
+                const user = data.users.find(x => x.name === u);
+                if (user && user.status === 'banned') {
+                    show('Account banned', 'error');
+                    return;
+                }
+                
+                currentUser = u;
+                isAdmin = false;
+                localStorage.setItem('currentUser', u);
+                localStorage.setItem('isAdmin', 'false');
+                
+                if (!user) {
+                    data.users.push({ name: u, status: 'active', role: 'member', joined: new Date().toISOString().split('T')[0] });
+                    save(data);
+                }
+                
+                log('login', u);
+                init();
+                show('Welcome ' + u + '!');
+            }
+        }
+
+        function logout() {
+            log('logout', currentUser);
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isAdmin');
+            location.reload();
+        }
+
+        function init() {
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('container').classList.add('active');
+            
+            document.getElementById('displayName').textContent = currentUser;
+            document.getElementById('avatar').textContent = isAdmin ? '👑' : '👤';
+            
+            const badge = document.getElementById('roleBadge');
+            if (isAdmin) {
+                badge.textContent = 'Admin';
+                badge.className = 'badge admin';
+                document.getElementById('displayRole').textContent = 'Administrator';
+                document.getElementById('adminToggle').classList.add('active');
+                
+                // Show admin controls
+                document.querySelectorAll('.section-controls').forEach(el => el.classList.add('active'));
+                document.getElementById('annEdit').classList.add('active');
+                document.getElementById('aboutEdit').classList.add('active');
+                document.querySelectorAll('.btn-del').forEach(el => el.classList.add('show'));
+            } else {
+                badge.textContent = 'Member';
+                badge.className = 'badge member';
+                document.getElementById('displayRole').textContent = 'Community Member';
+            }
+            
+            render();
+            if (isAdmin) updateAdmin();
+        }
+
+        function render() {
+            const data = load();
+            
+            renderList('members', data.members);
+            renderList('coords', data.coords);
+            renderList('farms', data.farms);
+            renderList('founders', data.founders);
+            renderList('info', data.info);
+            
+            document.getElementById('aboutText').textContent = data.about;
+            document.getElementById('annText').textContent = data.announcement;
+            
+            if (isAdmin) {
+                document.getElementById('aboutInput').value = data.about;
+                setTimeout(() => {
+                    document.querySelectorAll('.btn-del').forEach(el => el.classList.add('show'));
+                }, 100);
+            }
+        }
+
+        function renderList(type, items) {
+            const el = document.getElementById(type + 'List');
+            if (!items || items.length === 0) {
+                el.innerHTML = '<div class="empty">Empty</div>';
+                return;
+            }
+            
+            el.innerHTML = items.map((item, i) => `
+                <div class="item">
+                    <span>${escape(item)}</span>
+                    ${isAdmin ? `<button class="btn-del show" onclick="delItem('${type}', ${i})">✕</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function escape(t) {
+            const d = document.createElement('div');
+            d.textContent = t;
+            return d.innerHTML;
+        }
+
+        function addItem(type, inputId) {
+            if (!isAdmin) return;
+            
+            const val = document.getElementById(inputId).value.trim();
+            if (!val) {
+                show('Enter value', 'error');
+                return;
+            }
+            
+            const data = load();
+            if (!data[type]) data[type] = [];
+            data[type].push(val);
+            save(data);
+            
+            document.getElementById(inputId).value = '';
+            log('add', currentUser, type + ': ' + val);
+            render();
+            show('Added!');
+        }
+
+        function delItem(type, idx) {
+            if (!isAdmin) return;
+            
+            const data = load();
+            const removed = data[type].splice(idx, 1)[0];
+            save(data);
+            log('remove', currentUser, type + ': ' + removed);
+            render();
+            show('Removed!');
+        }
+
+        function updateAnn() {
+            if (!isAdmin) return;
+            
+            const val = document.getElementById('annInput').value.trim();
+            if (!val) return;
+            
+            const data = load();
+            data.announcement = val;
+            save(data);
+            document.getElementById('annInput').value = '';
+            log('update', currentUser, 'Announcement');
+            render();
+            show('Announcement updated!');
+        }
+
+        function saveAbout() {
+            if (!isAdmin) return;
+            
+            const val = document.getElementById('aboutInput').value.trim();
+            if (!val) return;
+            
+            const data = load();
+            data.about = val;
+            save(data);
+            log('update', currentUser, 'About');
+            render();
+            show('About updated!');
+        }
+
+        // Admin Functions
+        function toggleAdmin() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('active');
+            if (panel.classList.contains('active')) updateAdmin();
+        }
+
+        function updateAdmin() {
+            const data = load();
+            
+            // Stats
+            document.getElementById('statTotal').textContent = data.users.length;
+            document.getElementById('statOnline').textContent = Math.floor(Math.random() * 10) + 1;
+            document.getElementById('statBanned').textContent = data.users.filter(u => u.status === 'banned').length;
+            document.getElementById('statWarned').textContent = data.users.filter(u => u.status === 'warned').length;
+            
+            // User List
+            const list = document.getElementById('userList');
+            list.innerHTML = data.users.map(u => `
+                <div class="user-row">
+                    <div>
+                        <div class="user-name">${u.name} ${u.role === 'admin' ? '👑' : ''}</div>
+                        <div class="user-meta">Joined: ${u.joined}</div>
+                    </div>
+                    <div class="user-status">
+                        <span class="status ${u.status}">${u.status}</span>
+                        ${u.status !== 'banned' 
+                            ? `<button class="btn-small btn-ban" onclick="banUser('${u.name}')">Ban</button>` 
+                            : `<button class="btn-small btn-unban" onclick="unbanUser('${u.name}')">Unban</button>`
+                        }
+                        ${u.status !== 'warned' && u.status !== 'banned'
+                            ? `<button class="btn-small btn-warn" onclick="warnUser('${u.name}')">Warn</button>`
+                            : (u.status === 'warned' ? `<button class="btn-small btn-unban" onclick="clearWarn('${u.name}')">Clear</button>` : '')
+                        }
+                    </div>
+                </div>
+            `).join('');
+            
+            // Logs
+            document.getElementById('logs').innerHTML = data.logs.map(l => `
+                <div class="log-entry">
+                    <span class="log-time">${l.time}</span> ${l.icon} ${l.text}
+                </div>
+            `).join('');
+        }
+
+        function banUser(name) {
+            if (!confirm('Ban ' + name + '?')) return;
+            const data = load();
+            const u = data.users.find(x => x.name === name);
+            if (u) {
+                u.status = 'banned';
+                save(data);
+                log('ban', currentUser, name);
+                updateAdmin();
+                show(name + ' banned!');
+            }
+        }
+
+        function unbanUser(name) {
+            const data = load();
+            const u = data.users.find(x => x.name === name);
+            if (u) {
+                u.status = 'active';
+                save(data);
+                log('unban', currentUser, name);
+                updateAdmin();
+                show(name + ' unbanned!');
+            }
+        }
+
+        function warnUser(name) {
+            if (!confirm('Warn ' + name + '?')) return;
+            const data = load();
+            const u = data.users.find(x => x.name === name);
+            if (u) {
+                u.status = 'warned';
+                save(data);
+                log('warn', currentUser, name);
+                updateAdmin();
+                show(name + ' warned!');
+            }
+        }
+
+        function clearWarn(name) {
+            const data = load();
+            const u = data.users.find(x => x.name === name);
+            if (u) {
+                u.status = 'active';
+                save(data);
+                log('clear_warn', currentUser, name);
+                updateAdmin();
+                show('Warning cleared for ' + name);
+            }
+        }
+
+        function log(action, user, target = '') {
+            const data = load();
+            const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            const icons = { login: '🔑', logout: '🚪', add: '➕', remove: '➖', update: '📝', ban: '🚫', unban: '✅', warn: '⚠️', clear_warn: '✨' };
+            data.logs.unshift({ time, icon: icons[action] || '📌', text: `${user} ${action}${target ? ' ' + target : ''}` });
+            if (data.logs.length > 20) data.logs.pop();
+            save(data);
+        }
+
+        function clearLogs() {
+            if (!confirm('Clear all logs?')) return;
+            const data = load();
+            data.logs = [{ time: new Date().toLocaleTimeString(), icon: '🗑️', text: 'Logs cleared by ' + currentUser }];
+            save(data);
+            updateAdmin();
+            show('Logs cleared!');
+        }
+
+        function toggleMaintenance() {
+            const data = load();
+            data.maintenance = !data.maintenance;
+            save(data);
+            show('Maintenance: ' + (data.maintenance ? 'ON' : 'OFF'));
+        }
+
+        function exportData() {
+            const data = load();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mistymc_backup.json';
+            a.click();
+            show('Exported!');
+        }
+
+        function resetData() {
+            if (!confirm('RESET ALL DATA? This cannot be undone!')) return;
+            if (prompt('Type RESET to confirm:') !== 'RESET') {
+                show('Cancelled', 'error');
+                return;
+            }
+            localStorage.setItem('helpingHandData', JSON.stringify(defaultData));
+            log('reset', currentUser, 'All data');
+            render();
+            updateAdmin();
+            show('All data reset!');
+        }
+
+        function refreshData() {
+            render();
+            if (isAdmin) updateAdmin();
+            show('Refreshed!');
+        }
+
+        // Auto login
+        window.onload = () => {
+            const saved = localStorage.getItem('currentUser');
+            const admin = localStorage.getItem('isAdmin');
+            if (saved) {
+                currentUser = saved;
+                isAdmin = admin === 'true';
+                init();
+            }
+        };
+    </script>
+</body>
+</html>
