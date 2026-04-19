@@ -4,7 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Everything You Need by fjcoolcat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0a0e0a;
+            --bg-secondary: #111811;
+            --bg-card: #161b16;
+            --bg-hover: #1e241e;
+            --accent: #4ade80;
+            --accent-dark: #22c55e;
+            --accent-glow: rgba(74, 222, 128, 0.15);
+            --gold: #fbbf24;
+            --gold-dark: #f59e0b;
+            --text-primary: #f0fdf4;
+            --text-secondary: #86efac;
+            --text-muted: #4ade80;
+            --border: rgba(74, 222, 128, 0.1);
+            --border-hover: rgba(74, 222, 128, 0.3);
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,99 +32,627 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a5c1a 0%, #0d2e0d 50%, #1a472a 100%);
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
-            color: #fff;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* Animated background particles */
-        .particles {
+        /* Animated Background Grid */
+        .bg-grid {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background-image: 
+                linear-gradient(rgba(74, 222, 128, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(74, 222, 128, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
             pointer-events: none;
             z-index: 0;
         }
 
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 215, 0, 0.3);
-            border-radius: 50%;
-            animation: float 15s infinite;
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            top: -200px;
+            left: -200px;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-glow-2 {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.05) 0%, transparent 70%);
+            bottom: -300px;
+            right: -300px;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 25s ease-in-out infinite reverse;
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(30px, -30px); }
+            66% { transform: translate(-20px, 20px); }
         }
 
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 0 2rem;
+        }
+
+        .nav-content {
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
         }
 
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%);
-            border-radius: 20px;
-            margin-bottom: 30px;
-            border: 2px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .header h1 {
-            font-size: 3em;
-            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-            margin-bottom: 10px;
-            letter-spacing: 2px;
+            letter-spacing: -0.5px;
         }
 
-        .header p {
-            color: #a8e6a8;
-            font-size: 1.2em;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        .logo span {
+            font-weight: 400;
+            opacity: 0.7;
+            font-size: 0.9rem;
+            display: block;
+            margin-top: -5px;
         }
 
-        /* Admin Login Button */
-        .admin-login-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #1a5c1a;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 30px;
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .cart-btn {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             transition: all 0.3s;
-            z-index: 100;
         }
 
-        .admin-login-btn:hover {
+        .cart-btn:hover {
+            border-color: var(--accent);
+            background: var(--bg-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        /* Modal Styles */
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: 800;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-primary);
+        }
+
+        .admin-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .admin-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 2rem 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(to bottom, var(--accent), var(--gold));
+            border-radius: 2px;
+        }
+
+        /* Items Grid */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .item-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--gold));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-hover);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 60px var(--accent-glow);
+        }
+
+        .item-card:hover::before {
+            opacity: 1;
+        }
+
+        .item-image {
+            height: 180px;
+            background: linear-gradient(135deg, var(--bg-hover), var(--bg-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(74, 222, 128, 0.1) 0%, transparent 70%);
+        }
+
+        .item-content {
+            padding: 24px;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .item-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .item-price {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 191, 36, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .item-price .diamond-icon {
+            font-size: 1rem;
+        }
+
+        .item-price .amount {
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .item-stock {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .item-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .qty-selector {
+            display: flex;
+            align-items: center;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .qty-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .qty-input {
+            width: 40px;
+            text-align: center;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            -moz-appearance: textfield;
+        }
+
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .add-cart-btn {
+            flex: 1;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-cart-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(74, 222, 128, 0.3);
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border);
+            z-index: 2000;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 50px rgba(0,0,0,0.5);
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .cart-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cart-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .close-cart:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .cart-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .cart-item-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-hover);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .cart-item-info h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .cart-item-info .cart-item-price {
+            color: var(--gold);
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cart-item-qty button {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .cart-item-qty span {
+            font-weight: 700;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .remove-item {
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .remove-item:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .cart-empty-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .cart-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+        }
+
+        .cart-total .total-amount {
+            font-weight: 800;
+            color: var(--gold);
+            font-size: 1.5rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border: none;
+            color: #000;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3);
+        }
+
+        .checkout-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Checkout Modal */
         .modal {
             display: none;
             position: fixed;
@@ -113,10 +661,11 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.8);
-            z-index: 1000;
+            backdrop-filter: blur(10px);
+            z-index: 3000;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(5px);
+            padding: 20px;
         }
 
         .modal.active {
@@ -124,40 +673,38 @@
         }
 
         .modal-content {
-            background: linear-gradient(135deg, #1a3a1a 0%, #0d1f0d 100%);
-            border: 2px solid #ffd700;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
-            animation: slideIn 0.3s ease-out;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
         }
 
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
 
         .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
         }
 
         .modal-header h2 {
-            color: #ffd700;
-            font-size: 1.8em;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .close-btn {
-            background: none;
-            border: none;
-            color: #ff6b6b;
-            font-size: 1.5em;
-            cursor: pointer;
-            padding: 5px;
+        .modal-body {
+            padding: 24px;
         }
 
         .form-group {
@@ -167,344 +714,496 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #a8e6a8;
-            font-weight: 600;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
         }
 
         .form-group input,
         .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #2d5a2d;
+            padding: 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
             border-radius: 10px;
-            background: rgba(0,0,0,0.3);
-            color: #fff;
-            font-size: 16px;
+            color: var(--text-primary);
+            font-size: 1rem;
             transition: all 0.3s;
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #ffd700;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #1a5c1a;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
-        }
-
-        /* Shop Grid */
-        .shop-section h2 {
-            text-align: center;
-            font-size: 2.5em;
-            color: #ffd700;
-            margin-bottom: 30px;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-        }
-
-        .items-grid {
+        .form-row {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
 
-        .item-card {
-            background: linear-gradient(135deg, rgba(26, 60, 26, 0.9) 0%, rgba(13, 30, 13, 0.9) 100%);
-            border: 2px solid #2d5a2d;
-            border-radius: 15px;
-            padding: 25px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .item-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .item-card:hover {
-            transform: translateY(-5px);
-            border-color: #ffd700;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .item-card:hover::before {
-            opacity: 1;
-        }
-
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .item-name {
-            font-size: 1.5em;
-            color: #ffd700;
-            font-weight: bold;
-        }
-
-        .item-price {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #1a5c1a;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .diamond-icon {
-            font-size: 1.2em;
-        }
-
-        .item-description {
-            color: #a8e6a8;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .order-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(45deg, #2d5a2d, #3d7a3d);
-            color: #fff;
-            border: 2px solid #4a9a4a;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s;
-            position: relative;
-            z-index: 1;
-        }
-
-        .order-btn:hover {
-            background: linear-gradient(45deg, #3d7a3d, #4d9a4d);
-            transform: scale(1.02);
-        }
-
-        .delete-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #ff4444;
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-            z-index: 2;
-            font-weight: bold;
-        }
-
-        .admin-mode .delete-btn {
-            display: block;
-        }
-
-        /* Agreement Modal */
-        .agreement-text {
-            background: rgba(0,0,0,0.3);
+        .agreement-box {
+            background: rgba(251, 191, 36, 0.05);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 12px;
             padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #ffd700;
             margin-bottom: 20px;
-            line-height: 1.6;
-            color: #ffed4e;
+        }
+
+        .agreement-box p {
+            color: var(--gold);
             font-style: italic;
+            line-height: 1.6;
+            font-size: 0.95rem;
         }
 
         .checkbox-group {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
+            align-items: start;
+            gap: 12px;
+            margin-top: 16px;
         }
 
         .checkbox-group input[type="checkbox"] {
             width: 20px;
             height: 20px;
-            accent-color: #ffd700;
+            accent-color: var(--accent);
+            margin-top: 2px;
         }
 
-        /* Orders Section */
-        .orders-section {
-            background: linear-gradient(135deg, rgba(26, 60, 26, 0.8) 0%, rgba(13, 30, 13, 0.8) 100%);
-            border: 2px solid #ffd700;
+        .checkbox-group label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            border: none;
+            color: #000;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.3);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
             border-radius: 20px;
             padding: 30px;
-            margin-top: 40px;
-            display: none;
+            margin-bottom: 40px;
         }
 
-        .orders-section.active {
+        .admin-panel.active {
             display: block;
         }
 
-        .orders-section h2 {
-            color: #ffd700;
-            margin-bottom: 20px;
-            font-size: 2em;
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
         }
 
-        .order-item {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid #2d5a2d;
+        .admin-tab {
+            padding: 10px 20px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
             border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr auto;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .order-info {
-            color: #a8e6a8;
-        }
-
-        .order-info strong {
-            color: #ffd700;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .status-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 20px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
             transition: all 0.3s;
         }
 
+        .admin-tab.active {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+        }
+
+        .admin-tab:hover:not(.active) {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        .admin-content.active {
+            display: block;
+        }
+
+        .add-item-form {
+            display: grid;
+            gap: 16px;
+            max-width: 600px;
+        }
+
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .order-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .order-card:hover {
+            border-color: var(--border-hover);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .order-id {
+            font-family: monospace;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .order-status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
         .status-pending {
-            background: #ffd700;
-            color: #1a5c1a;
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
         .status-completed {
-            background: #4a9a4a;
-            color: white;
+            background: rgba(74, 222, 128, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(74, 222, 128, 0.3);
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6a9a6a;
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
         }
 
-        .empty-state h3 {
-            font-size: 1.5em;
-            margin-bottom: 10px;
+        .order-detail {
+            background: var(--bg-primary);
+            padding: 12px;
+            border-radius: 8px;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header h1 { font-size: 2em; }
-            .items-grid { grid-template-columns: 1fr; }
-            .order-item { grid-template-columns: 1fr; }
+        .order-detail label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
+        .order-detail value {
+            color: var(--text-primary);
+            font-weight: 600;
         }
 
-        ::-webkit-scrollbar-track {
-            background: #0d2e0d;
+        .order-items {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #ffd700;
-            border-radius: 5px;
+        .order-item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            color: var(--text-secondary);
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ffed4e;
+        .order-item-row span:last-child {
+            color: var(--gold);
+            font-weight: 700;
         }
 
+        /* Toast */
         .toast {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #1a5c1a;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-weight: bold;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
             transform: translateX(400px);
-            transition: transform 0.3s;
-            z-index: 2000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 4000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
         }
 
         .toast.show {
             transform: translateX(0);
         }
+
+        .toast.error {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .toast.success {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .cart-sidebar { width: 100%; right: -100%; }
+            .items-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .hero-stats { flex-direction: column; gap: 20px; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-hover);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 10;
+        }
+
+        .admin-mode .delete-btn {
+            display: flex;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .stat-card h3 {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
     </style>
 </head>
 <body>
-    <!-- Background Particles -->
-    <div class="particles" id="particles"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
 
-    <!-- Admin Login Button -->
-    <button class="admin-login-btn" onclick="openAdminLogin()">🔒 Admin Login</button>
-
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>Everything You Need</h1>
-            <p>by fjcoolcat - Premium Minecraft Shop</p>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                Everything You Need
+                <span>by fjcoolcat</span>
+            </div>
+            <div class="nav-actions">
+                <button class="cart-btn" onclick="toggleCart()">
+                    🛒 Cart
+                    <span class="cart-count" id="cartCount" style="display: none;">0</span>
+                </button>
+                <button class="admin-btn" onclick="toggleAdmin()" id="adminBtn">
+                    🔒 Admin
+                </button>
+            </div>
         </div>
+    </nav>
 
-        <!-- Shop Section -->
-        <div class="shop-section">
-            <h2>💎 Shop Items</h2>
-            <div class="items-grid" id="itemsGrid">
-                <!-- Items will be loaded here -->
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>🛒 Your Cart</h2>
+            <button class="close-cart" onclick="toggleCart()">×</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <div class="cart-empty-icon">🛒</div>
+                <p>Your cart is empty</p>
+                <p style="font-size: 0.875rem; margin-top: 8px;">Add some items to get started!</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span class="total-amount" id="cartTotal">💎 0</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn" onclick="openCheckout()" disabled>
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Hero -->
+        <div class="hero">
+            <h1>Everything You Need</h1>
+            <p>Premium Minecraft items delivered to your coordinates. Safe, fast, and reliable trading.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value" id="statItems">0</div>
+                    <div class="stat-label">Items</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="statOrders">0</div>
+                    <div class="stat-label">Orders</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">Delivery</div>
+                </div>
             </div>
         </div>
 
-        <!-- Orders Section (Admin Only) -->
-        <div class="orders-section" id="ordersSection">
-            <h2>📋 Orders</h2>
-            <div id="ordersList"></div>
+        <!-- Admin Panel -->
+        <div class="admin-panel" id="adminPanel">
+            <div class="section-header">
+                <div class="section-title">Admin Panel</div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Orders</h3>
+                    <div class="value" id="adminTotalOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending</h3>
+                    <div class="value" id="adminPendingOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Completed</h3>
+                    <div class="value" id="adminCompletedOrders">0</div>
+                </div>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="switchTab('items')">Manage Items</button>
+                <button class="admin-tab" onclick="switchTab('orders')">View Orders</button>
+            </div>
+
+            <div class="admin-content active" id="tab-items">
+                <h3 style="margin-bottom: 20px; color: var(--text-secondary);">Add New Item</h3>
+                <div class="add-item-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Item Name</label>
+                            <input type="text" id="newItemName" placeholder="e.g., Netherite Sword">
+                        </div>
+                        <div class="form-group">
+                            <label>Price (Diamonds)</label>
+                            <input type="number" id="newItemPrice" placeholder="64" min="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Stock Amount</label>
+                            <input type="number" id="newItemStock" placeholder="10" min="1" value="10">
+                        </div>
+                        <div class="form-group">
+                            <label>Icon (Emoji)</label>
+                            <input type="text" id="newItemIcon" placeholder="⚔️" value="📦">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="newItemDesc" rows="3" placeholder="Item description..."></textarea>
+                    </div>
+                    <button class="submit-btn" onclick="addItem()" style="max-width: 200px;">
+                        ➕ Add Item
+                    </button>
+                </div>
+            </div>
+
+            <div class="admin-content" id="tab-orders">
+                <div class="orders-list" id="adminOrdersList">
+                    <p style="color: var(--text-muted); text-align: center; padding: 40px;">No orders yet</p>
+                </div>
+            </div>
         </div>
+
+        <!-- Shop Items -->
+        <div class="section-header">
+            <div class="section-title">Shop Items</div>
+        </div>
+        <div class="items-grid" id="itemsGrid"></div>
     </div>
 
     <!-- Admin Login Modal -->
@@ -512,108 +1211,112 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>🔐 Admin Login</h2>
-                <button class="close-btn" onclick="closeModal('adminLoginModal')">&times;</button>
+                <button class="close-cart" onclick="closeModal('adminLoginModal')">×</button>
             </div>
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="adminUser" placeholder="Enter username...">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="adminUser" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="adminPass" placeholder="Password">
+                </div>
+                <button class="submit-btn" onclick="loginAdmin()">Login</button>
             </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="adminPass" placeholder="Enter password...">
-            </div>
-            <button class="submit-btn" onclick="loginAdmin()">Login</button>
         </div>
     </div>
 
-    <!-- Add Item Modal (Admin Only) -->
-    <div class="modal" id="addItemModal">
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>➕ Add New Item</h2>
-                <button class="close-btn" onclick="closeModal('addItemModal')">&times;</button>
+                <h2>💳 Checkout</h2>
+                <button class="close-cart" onclick="closeModal('checkoutModal')">×</button>
             </div>
-            <div class="form-group">
-                <label>Item Name</label>
-                <input type="text" id="itemName" placeholder="e.g., Netherite Sword">
+            <div class="modal-body">
+                <div style="background: var(--bg-card); padding: 20px; border-radius: 12px; margin-bottom: 24px;">
+                    <h3 style="margin-bottom: 16px; color: var(--gold);">Order Summary</h3>
+                    <div id="checkoutSummary"></div>
+                    <div style="border-top: 1px solid var(--border); margin-top: 16px; padding-top: 16px; display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 800;">
+                        <span>Total</span>
+                        <span style="color: var(--gold);" id="checkoutTotal">💎 0</span>
+                    </div>
+                </div>
+
+                <div class="agreement-box">
+                    <p>"By accepting this you are not allowed to scam be at all every"</p>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="agreeTerms">
+                        <label for="agreeTerms">I agree to the terms and conditions</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Discord Username</label>
+                    <input type="text" id="discordUser" placeholder="username#1234">
+                </div>
+                <div class="form-group">
+                    <label>In-Game Name</label>
+                    <input type="text" id="ignUser" placeholder="Your Minecraft username">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>X Coordinate</label>
+                        <input type="number" id="coordX" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Y Coordinate</label>
+                        <input type="number" id="coordY" placeholder="64">
+                    </div>
+                    <div class="form-group">
+                        <label>Z Coordinate</label>
+                        <input type="number" id="coordZ" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Additional Notes (Optional)</label>
+                    <textarea id="orderNotes" rows="2" placeholder="Any special requests..."></textarea>
+                </div>
+
+                <button class="submit-btn" onclick="submitOrder()">Place Order</button>
             </div>
-            <div class="form-group">
-                <label>Price (Diamonds)</label>
-                <input type="number" id="itemPrice" placeholder="e.g., 64" min="1">
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="itemDesc" rows="3" placeholder="Describe the item..."></textarea>
-            </div>
-            <button class="submit-btn" onclick="addItem()">Add Item</button>
         </div>
     </div>
 
-    <!-- Order Modal -->
-    <div class="modal" id="orderModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🛒 Place Order</h2>
-                <button class="close-btn" onclick="closeModal('orderModal')">&times;</button>
-            </div>
-            <div id="orderItemDetails"></div>
-            <div class="agreement-text">
-                "By accepting this you are not allowed to scam be at all every"
-            </div>
-            <div class="form-group">
-                <label>Discord Username</label>
-                <input type="text" id="discordUser" placeholder="e.g., user#1234">
-            </div>
-            <div class="form-group">
-                <label>In-Game Name</label>
-                <input type="text" id="ignUser" placeholder="Your Minecraft username">
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="agreeCheck">
-                <label for="agreeCheck">I agree to the terms above</label>
-            </div>
-            <button class="submit-btn" onclick="submitOrder()">Confirm Order</button>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
+    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script>
-        // Initialize particles
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
-                container.appendChild(particle);
-            }
-        }
-        createParticles();
-
-        // Data Storage
+        // Data
         let items = JSON.parse(localStorage.getItem('shopItems')) || [
-            { id: 1, name: 'Diamond Sword', price: 32, description: 'Sharpness V, Unbreaking III, Mending - Perfect for PvP!' },
-            { id: 2, name: 'Netherite Pickaxe', price: 64, description: 'Efficiency V, Fortune III - Mine like a pro!' },
-            { id: 3, name: 'Elytra', price: 128, description: 'Fly through the skies with this rare item!' }
+            { id: 1, name: 'Netherite Sword', price: 32, stock: 10, icon: '⚔️', description: 'Sharpness V, Unbreaking III, Mending. Perfect for PvP and PvE!' },
+            { id: 2, name: 'Elytra', price: 64, stock: 5, icon: '🪽', description: 'Fly through the skies! Includes free firework rockets.' },
+            { id: 3, name: 'Beacon', price: 128, stock: 3, icon: '🔮', description: 'Full pyramid included! Choose your buff: Speed, Haste, or Strength.' },
+            { id: 4, name: 'Shulker Box', price: 16, stock: 20, icon: '📦', description: 'Portable storage! Comes pre-colored in your choice of color.' }
         ];
+        let cart = JSON.parse(localStorage.getItem('shopCart')) || [];
         let orders = JSON.parse(localStorage.getItem('shopOrders')) || [];
-        let currentItem = null;
         let isAdmin = false;
+
+        // Initialize
+        function init() {
+            loadItems();
+            updateCart();
+            updateStats();
+        }
 
         // Load Items
         function loadItems() {
             const grid = document.getElementById('itemsGrid');
             grid.innerHTML = '';
-            
+
             if (items.length === 0) {
                 grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
+                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-muted);">
+                        <div style="font-size: 4rem; margin-bottom: 16px;">📭</div>
                         <h3>No items available</h3>
-                        <p>Check back later or contact an admin!</p>
+                        <p>Check back later!</p>
                     </div>
                 `;
                 return;
@@ -623,40 +1326,421 @@
                 const card = document.createElement('div');
                 card.className = 'item-card';
                 if (isAdmin) card.classList.add('admin-mode');
+                
                 card.innerHTML = `
                     <button class="delete-btn" onclick="deleteItem(${item.id})" title="Delete Item">×</button>
-                    <div class="item-header">
-                        <div class="item-name">${item.name}</div>
-                        <div class="item-price">
-                            <span class="diamond-icon">💎</span>
-                            ${item.price}
+                    <div class="item-image">
+                        <span style="z-index: 1;">${item.icon}</span>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-header">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-price">
+                                <span class="diamond-icon">💎</span>
+                                <span class="amount">${item.price}</span>
+                            </div>
+                        </div>
+                        <div class="item-stock">
+                            <span style="color: ${item.stock > 0 ? 'var(--accent)' : 'var(--danger)'};">●</span>
+                            ${item.stock > 0 ? `${item.stock} in stock` : 'Out of stock'}
+                        </div>
+                        <div class="item-description">${item.description}</div>
+                        <div class="item-actions">
+                            <div class="qty-selector">
+                                <button class="qty-btn" onclick="adjustQty(${item.id}, -1)">−</button>
+                                <input type="number" class="qty-input" id="qty-${item.id}" value="1" min="1" max="${item.stock}">
+                                <button class="qty-btn" onclick="adjustQty(${item.id}, 1)">+</button>
+                            </div>
+                            <button class="add-cart-btn" onclick="addToCart(${item.id})" ${item.stock <= 0 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
-                    <div class="item-description">${item.description}</div>
-                    <button class="order-btn" onclick="openOrder(${item.id})">Order Now</button>
                 `;
                 grid.appendChild(card);
             });
 
-            // Add "Add Item" card for admin
-            if (isAdmin) {
-                const addCard = document.createElement('div');
-                addCard.className = 'item-card';
-                addCard.style.border = '2px dashed #ffd700';
-                addCard.style.display = 'flex';
-                addCard.style.alignItems = 'center';
-                addCard.style.justifyContent = 'center';
-                addCard.style.cursor = 'pointer';
-                addCard.style.minHeight = '200px';
-                addCard.innerHTML = `
-                    <div style="text-align: center; color: #ffd700;">
-                        <div style="font-size: 3em; margin-bottom: 10px;">+</div>
-                        <div style="font-size: 1.2em; font-weight: bold;">Add New Item</div>
+            document.getElementById('statItems').textContent = items.length;
+        }
+
+        function adjustQty(itemId, delta) {
+            const input = document.getElementById(`qty-${itemId}`);
+            const item = items.find(i => i.id === itemId);
+            let val = parseInt(input.value) + delta;
+            if (val < 1) val = 1;
+            if (val > item.stock) val = item.stock;
+            input.value = val;
+        }
+
+        // Cart Functions
+        function addToCart(itemId) {
+            const item = items.find(i => i.id === itemId);
+            const qty = parseInt(document.getElementById(`qty-${itemId}`).value);
+            
+            if (!item || item.stock < qty) {
+                showToast('Not enough stock!', 'error');
+                return;
+            }
+
+            const existing = cart.find(c => c.id === itemId);
+            if (existing) {
+                if (existing.qty + qty > item.stock) {
+                    showToast('Not enough stock!', 'error');
+                    return;
+                }
+                existing.qty += qty;
+            } else {
+                cart.push({ id: itemId, qty: qty });
+            }
+
+            localStorage.setItem('shopCart', JSON.stringify(cart));
+            updateCart();
+            showToast(`Added ${qty}x ${item.name} to cart!`);
+            
+            // Open cart
+            document.getElementById('cartSidebar').classList.add('active');
+            document.getElementById('cartOverlay').classList.add('active');
+        }
+
+        function updateCart() {
+            const container = document.getElementById('cartItems');
+            const countBadge = document.getElementById('cartCount');
+            const totalEl = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            const totalItems = cart.reduce((sum, c) => sum + c.qty, 0);
+            const totalPrice = cart.reduce((sum, c) => {
+                const item = items.find(i => i.id === c.id);
+                return sum + (item ? item.price * c.qty : 0);
+            }, 0);
+
+            countBadge.textContent = totalItems;
+            countBadge.style.display = totalItems > 0 ? 'flex' : 'none';
+            totalEl.textContent = `💎 ${totalPrice}`;
+            checkoutBtn.disabled = cart.length === 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="cart-empty">
+                        <div class="cart-empty-icon">🛒</div>
+                        <p>Your cart is empty</p>
+                        <p style="font-size: 0.875rem; margin-top: 8px;">Add some items to get started!</p>
                     </div>
                 `;
-                addCard.onclick = () => openModal('addItemModal');
-                grid.appendChild(addCard);
+                return;
             }
+
+            container.innerHTML = cart.map(c => {
+                const item = items.find(i => i.id === c.id);
+                if (!item) return '';
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-icon">${item.icon}</div>
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <div class="cart-item-price">💎 ${item.price} each</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="cart-item-qty">
+                                <button onclick="updateCartQty(${c.id}, -1)">−</button>
+                                <span>${c.qty}</span>
+                                <button onclick="updateCartQty(${c.id}, 1)">+</button>
+                            </div>
+                            <div style="color: var(--gold); font-weight: 800; margin-top: 4px;">
+                                💎 ${item.price * c.qty}
+                            </div>
+                            <div class="remove-item" onclick="removeFromCart(${c.id})">🗑️</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateCartQty(itemId, delta) {
+            const cartItem = cart.find(c => c.id === itemId);
+            const item = items.find(i => i.id === itemId);
+            if (!cartItem || !item) return;
+
+            cartItem.qty += delta;
+            if (cartItem.qty < 1) cartItem.qty = 1;
+            if (cartItem.qty > item.stock) cartItem.qty = item.stock;
+
+            localStorage.setItem('shopCart', JSON.stringify(cart));
+            updateCart();
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(c => c.id !== itemId);
+            localStorage.setItem('shopCart', JSON.stringify(cart));
+            updateCart();
+            showToast('Item removed from cart');
+        }
+
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('active');
+            document.getElementById('cartOverlay').classList.toggle('active');
+        }
+
+        // Checkout
+        function openCheckout() {
+            if (cart.length === 0) return;
+            
+            const summary = document.getElementById('checkoutSummary');
+            const totalPrice = cart.reduce((sum, c) => {
+                const item = items.find(i => i.id === c.id);
+                return sum + (item ? item.price * c.qty : 0);
+            }, 0);
+
+            summary.innerHTML = cart.map(c => {
+                const item = items.find(i => i.id === c.id);
+                return `
+                    <div class="order-item-row">
+                        <span>${item.icon} ${item.name} x${c.qty}</span>
+                        <span>💎 ${item.price * c.qty}</span>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('checkoutTotal').textContent = `💎 ${totalPrice}`;
+            document.getElementById('discordUser').value = '';
+            document.getElementById('ignUser').value = '';
+            document.getElementById('coordX').value = '';
+            document.getElementById('coordY').value = '';
+            document.getElementById('coordZ').value = '';
+            document.getElementById('orderNotes').value = '';
+            document.getElementById('agreeTerms').checked = false;
+
+            toggleCart();
+            openModal('checkoutModal');
+        }
+
+        function submitOrder() {
+            const discord = document.getElementById('discordUser').value;
+            const ign = document.getElementById('ignUser').value;
+            const x = document.getElementById('coordX').value;
+            const y = document.getElementById('coordY').value;
+            const z = document.getElementById('coordZ').value;
+            const notes = document.getElementById('orderNotes').value;
+            const agreed = document.getElementById('agreeTerms').checked;
+
+            if (!discord || !ign || !x || !y || !z) {
+                showToast('Please fill in all fields!', 'error');
+                return;
+            }
+
+            if (!agreed) {
+                showToast('You must accept the agreement!', 'error');
+                return;
+            }
+
+            const orderItems = cart.map(c => {
+                const item = items.find(i => i.id === c.id);
+                return {
+                    name: item.name,
+                    qty: c.qty,
+                    price: item.price,
+                    total: item.price * c.qty
+                };
+            });
+
+            const totalPrice = orderItems.reduce((sum, i) => sum + i.total, 0);
+
+            const order = {
+                id: 'ORD-' + Date.now().toString(36).toUpperCase(),
+                items: orderItems,
+                total: totalPrice,
+                discord: discord,
+                ign: ign,
+                coords: { x, y, z },
+                notes: notes,
+                status: 'pending',
+                date: new Date().toLocaleString()
+            };
+
+            orders.push(order);
+            localStorage.setItem('shopOrders', JSON.stringify(orders));
+
+            // Reduce stock
+            cart.forEach(c => {
+                const item = items.find(i => i.id === c.id);
+                if (item) item.stock -= c.qty;
+            });
+            localStorage.setItem('shopItems', JSON.stringify(items));
+
+            // Clear cart
+            cart = [];
+            localStorage.setItem('shopCart', JSON.stringify(cart));
+            updateCart();
+            loadItems();
+
+            closeModal('checkoutModal');
+            showToast('Order placed successfully! ✅');
+            updateStats();
+            
+            if (isAdmin) loadAdminOrders();
+        }
+
+        // Admin Functions
+        function toggleAdmin() {
+            if (isAdmin) {
+                logoutAdmin();
+            } else {
+                openModal('adminLoginModal');
+            }
+        }
+
+        function loginAdmin() {
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+
+            if (user === 'Fjowner' && pass === '121') {
+                isAdmin = true;
+                closeModal('adminLoginModal');
+                document.getElementById('adminBtn').textContent = '🔓 Logout';
+                document.getElementById('adminPanel').classList.add('active');
+                document.getElementById('adminUser').value = '';
+                document.getElementById('adminPass').value = '';
+                loadItems();
+                loadAdminOrders();
+                updateAdminStats();
+                showToast('Welcome back, Admin! 🎉');
+            } else {
+                showToast('Invalid credentials! ❌', 'error');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById('adminBtn').textContent = '🔒 Admin';
+            document.getElementById('adminPanel').classList.remove('active');
+            loadItems();
+            showToast('Logged out successfully');
+        }
+
+        function addItem() {
+            const name = document.getElementById('newItemName').value;
+            const price = document.getElementById('newItemPrice').value;
+            const stock = document.getElementById('newItemStock').value;
+            const icon = document.getElementById('newItemIcon').value;
+            const desc = document.getElementById('newItemDesc').value;
+
+            if (!name || !price || !stock || !desc) {
+                showToast('Please fill all fields!', 'error');
+                return;
+            }
+
+            const newItem = {
+                id: Date.now(),
+                name: name,
+                price: parseInt(price),
+                stock: parseInt(stock),
+                icon: icon || '📦',
+                description: desc
+            };
+
+            items.push(newItem);
+            localStorage.setItem('shopItems', JSON.stringify(items));
+
+            document.getElementById('newItemName').value = '';
+            document.getElementById('newItemPrice').value = '';
+            document.getElementById('newItemStock').value = '10';
+            document.getElementById('newItemIcon').value = '📦';
+            document.getElementById('newItemDesc').value = '';
+
+            loadItems();
+            updateStats();
+            showToast('Item added successfully! ✅');
+        }
+
+        function deleteItem(id) {
+            if (!confirm('Delete this item?')) return;
+            items = items.filter(i => i.id !== id);
+            localStorage.setItem('shopItems', JSON.stringify(items));
+            loadItems();
+            updateStats();
+            showToast('Item deleted');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            
+            if (tab === 'orders') loadAdminOrders();
+        }
+
+        function loadAdminOrders() {
+            const container = document.getElementById('adminOrdersList');
+            
+            if (orders.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 40px;">No orders yet</p>';
+                updateAdminStats();
+                return;
+            }
+
+            container.innerHTML = orders.slice().reverse().map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-id">${order.id}</div>
+                            <div style="color: var(--text-muted); font-size: 0.875rem; margin-top: 4px;">${order.date}</div>
+                        </div>
+                        <button class="order-status status-${order.status}" onclick="toggleOrderStatus('${order.id}')">
+                            ${order.status === 'pending' ? '⏳ Pending' : '✅ Completed'}
+                        </button>
+                    </div>
+                    <div class="order-details">
+                        <div class="order-detail">
+                            <label>Discord</label>
+                            <value>${order.discord}</value>
+                        </div>
+                        <div class="order-detail">
+                            <label>In-Game Name</label>
+                            <value>${order.ign}</value>
+                        </div>
+                        <div class="order-detail">
+                            <label>Coordinates</label>
+                            <value style="font-family: monospace;">X:${order.coords.x} Y:${order.coords.y} Z:${order.coords.z}</value>
+                        </div>
+                        <div class="order-detail">
+                            <label>Total</label>
+                            <value style="color: var(--gold);">💎 ${order.total}</value>
+                        </div>
+                    </div>
+                    ${order.notes ? `<div style="margin-top: 12px; padding: 12px; background: var(--bg-primary); border-radius: 8px; color: var(--text-secondary); font-size: 0.9rem;"><strong>Note:</strong> ${order.notes}</div>` : ''}
+                    <div class="order-items">
+                        ${order.items.map(i => `
+                            <div class="order-item-row">
+                                <span>${i.name} x${i.qty}</span>
+                                <span>💎 ${i.total}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            updateAdminStats();
+        }
+
+        function toggleOrderStatus(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = order.status === 'pending' ? 'completed' : 'pending';
+                localStorage.setItem('shopOrders', JSON.stringify(orders));
+                loadAdminOrders();
+                showToast(`Order marked as ${order.status}!`);
+            }
+        }
+
+        function updateAdminStats() {
+            const total = orders.length;
+            const pending = orders.filter(o => o.status === 'pending').length;
+            const completed = orders.filter(o => o.status === 'completed').length;
+
+            document.getElementById('adminTotalOrders').textContent = total;
+            document.getElementById('adminPendingOrders').textContent = pending;
+            document.getElementById('adminCompletedOrders').textContent = completed;
         }
 
         // Modal Functions
@@ -668,187 +1752,27 @@
             document.getElementById(id).classList.remove('active');
         }
 
-        function openAdminLogin() {
-            if (isAdmin) {
-                logoutAdmin();
-                return;
-            }
-            openModal('adminLoginModal');
-        }
-
-        // Admin Functions
-        function loginAdmin() {
-            const user = document.getElementById('adminUser').value;
-            const pass = document.getElementById('adminPass').value;
-
-            if (user === 'Fjowner' && pass === '121') {
-                isAdmin = true;
-                closeModal('adminLoginModal');
-                document.querySelector('.admin-login-btn').textContent = '🔓 Logout';
-                document.getElementById('ordersSection').classList.add('active');
-                loadItems();
-                loadOrders();
-                showToast('Welcome, Admin! 🎉');
-            } else {
-                showToast('Invalid credentials! ❌');
-            }
-        }
-
-        function logoutAdmin() {
-            isAdmin = false;
-            document.querySelector('.admin-login-btn').textContent = '🔒 Admin Login';
-            document.getElementById('ordersSection').classList.remove('active');
-            loadItems();
-            showToast('Logged out successfully');
-        }
-
-        function addItem() {
-            const name = document.getElementById('itemName').value;
-            const price = document.getElementById('itemPrice').value;
-            const desc = document.getElementById('itemDesc').value;
-
-            if (!name || !price || !desc) {
-                showToast('Please fill all fields! ⚠️');
-                return;
-            }
-
-            const newItem = {
-                id: Date.now(),
-                name: name,
-                price: parseInt(price),
-                description: desc
-            };
-
-            items.push(newItem);
-            localStorage.setItem('shopItems', JSON.stringify(items));
-            
-            document.getElementById('itemName').value = '';
-            document.getElementById('itemPrice').value = '';
-            document.getElementById('itemDesc').value = '';
-            
-            closeModal('addItemModal');
-            loadItems();
-            showToast('Item added successfully! ✅');
-        }
-
-        function deleteItem(id) {
-            if (!confirm('Are you sure you want to delete this item?')) return;
-            items = items.filter(item => item.id !== id);
-            localStorage.setItem('shopItems', JSON.stringify(items));
-            loadItems();
-            showToast('Item deleted! 🗑️');
-        }
-
-        // Order Functions
-        function openOrder(itemId) {
-            currentItem = items.find(item => item.id === itemId);
-            if (!currentItem) return;
-
-            document.getElementById('orderItemDetails').innerHTML = `
-                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #ffd700;">
-                    <strong style="color: #ffd700; font-size: 1.2em;">${currentItem.name}</strong><br>
-                    <span style="color: #a8e6a8;">Price: 💎 ${currentItem.price} Diamonds</span>
-                </div>
-            `;
-            
-            document.getElementById('discordUser').value = '';
-            document.getElementById('ignUser').value = '';
-            document.getElementById('agreeCheck').checked = false;
-            
-            openModal('orderModal');
-        }
-
-        function submitOrder() {
-            const discord = document.getElementById('discordUser').value;
-            const ign = document.getElementById('ignUser').value;
-            const agreed = document.getElementById('agreeCheck').checked;
-
-            if (!discord || !ign) {
-                showToast('Please fill in all fields! ⚠️');
-                return;
-            }
-
-            if (!agreed) {
-                showToast('You must accept the agreement! ⚠️');
-                return;
-            }
-
-            const order = {
-                id: Date.now(),
-                itemName: currentItem.name,
-                itemPrice: currentItem.price,
-                discord: discord,
-                ign: ign,
-                status: 'pending',
-                date: new Date().toLocaleString()
-            };
-
-            orders.push(order);
-            localStorage.setItem('shopOrders', JSON.stringify(orders));
-            
-            closeModal('orderModal');
-            showToast('Order placed successfully! ✅');
-            
-            if (isAdmin) loadOrders();
-        }
-
-        function loadOrders() {
-            const container = document.getElementById('ordersList');
-            
-            if (orders.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #6a9a6a;">No orders yet</p>';
-                return;
-            }
-
-            container.innerHTML = orders.map(order => `
-                <div class="order-item">
-                    <div class="order-info">
-                        <strong>Item</strong>
-                        ${order.itemName}<br>
-                        <small style="color: #ffd700;">💎 ${order.itemPrice}</small>
-                    </div>
-                    <div class="order-info">
-                        <strong>Discord</strong>
-                        ${order.discord}
-                    </div>
-                    <div class="order-info">
-                        <strong>IGN</strong>
-                        ${order.ign}
-                    </div>
-                    <button class="status-btn ${order.status === 'pending' ? 'status-pending' : 'status-completed'}" 
-                            onclick="toggleStatus(${order.id})">
-                        ${order.status === 'pending' ? '⏳ Pending' : '✅ Done'}
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function toggleStatus(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (order) {
-                order.status = order.status === 'pending' ? 'completed' : 'pending';
-                localStorage.setItem('shopOrders', JSON.stringify(orders));
-                loadOrders();
-            }
-        }
-
-        // Toast Notification
-        function showToast(message) {
+        // Toast
+        function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.classList.add('show');
+            toast.className = `toast ${type} show`;
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
+        function updateStats() {
+            document.getElementById('statOrders').textContent = orders.length;
+        }
+
         // Close modals on outside click
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('active');
+        window.onclick = function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
             }
         }
 
-        // Initial Load
-        loadItems();
+        // Init
+        init();
     </script>
 </body>
 </html>
