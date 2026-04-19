@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Everything You Need by Fjcoolcat - AetheriaMc Shop</title>
+    <title>Everything You Need by Fjcoolcat - Minecraft Shop</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -32,8 +32,6 @@
             --warning-glow: rgba(212, 153, 34, 0.3);
             --purple: #a371f7;
             --purple-glow: rgba(163, 113, 247, 0.3);
-            --gold: #ffd700;
-            --gold-glow: rgba(255, 215, 0, 0.4);
         }
 
         body {
@@ -44,7 +42,6 @@
             line-height: 1.5;
         }
 
-        /* Animated Background */
         body::before {
             content: '';
             position: fixed;
@@ -60,10 +57,9 @@
             z-index: -1;
         }
 
-        /* Glowing Header */
         .header {
             background: linear-gradient(180deg, #0d1117 0%, var(--bg-primary) 100%);
-            padding: 2.5rem 1rem;
+            padding: 2rem 1rem;
             text-align: center;
             border-bottom: 2px solid var(--accent-blue);
             position: relative;
@@ -86,15 +82,36 @@
             100% { left: 100%; }
         }
 
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-blue);
+            box-shadow: 0 0 30px var(--accent-blue-glow);
+            object-fit: cover;
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { box-shadow: 0 0 30px var(--accent-blue-glow); }
+            50% { box-shadow: 0 0 50px var(--accent-blue-glow), 0 0 80px rgba(74, 158, 255, 0.2); }
+        }
+
         .header h1 {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: 700;
             background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue), var(--purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-shadow: 0 0 30px var(--accent-blue-glow);
-            margin-bottom: 0.5rem;
             letter-spacing: -0.5px;
             animation: titlePulse 3s ease-in-out infinite;
         }
@@ -111,7 +128,6 @@
             text-shadow: 0 0 10px rgba(139, 148, 158, 0.2);
         }
 
-        /* Navigation */
         .nav-bar {
             background: rgba(17, 19, 24, 0.95);
             backdrop-filter: blur(10px);
@@ -237,7 +253,6 @@
             box-shadow: 0 0 15px var(--purple-glow);
         }
 
-        /* Main Container */
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -253,7 +268,6 @@
             text-shadow: 0 0 10px var(--success-glow);
         }
 
-        /* Search Bar */
         .search-container {
             display: flex;
             gap: 0.75rem;
@@ -301,7 +315,6 @@
             box-shadow: 0 0 25px var(--accent-blue-glow);
         }
 
-        /* Items List */
         .items-list {
             display: flex;
             flex-direction: column;
@@ -454,7 +467,6 @@
             box-shadow: none;
         }
 
-        /* Cart Overlay */
         .cart-overlay {
             display: none;
             position: fixed;
@@ -560,7 +572,6 @@
             box-shadow: 0 0 25px var(--accent-blue-glow);
         }
 
-        /* Checkout Form */
         .checkout-form {
             display: none;
             position: fixed;
@@ -652,7 +663,6 @@
             accent-color: var(--accent-blue);
         }
 
-        /* Confirmation */
         .confirmation {
             display: none;
             position: fixed;
@@ -684,7 +694,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* Login */
         .login-overlay {
             display: none;
             position: fixed;
@@ -769,7 +778,6 @@
             text-shadow: 0 0 10px var(--danger-glow);
         }
 
-        /* Owner Panel */
         .owner-panel {
             display: none;
             position: fixed;
@@ -843,7 +851,6 @@
             display: block;
         }
 
-        /* Orders */
         .order-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -1007,7 +1014,6 @@
             box-shadow: 0 0 20px var(--danger-glow);
         }
 
-        /* Admin Form */
         .admin-form {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -1098,7 +1104,6 @@
             box-shadow: 0 0 15px var(--danger-glow);
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -1116,9 +1121,9 @@
             background: #4a4d55;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .header h1 { font-size: 2rem; }
+            .logo-img { width: 80px; height: 80px; }
             .item-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
             .item-actions { 
                 width: 100%; 
@@ -1131,7 +1136,6 @@
             .nav-bar { padding: 1rem; }
         }
 
-        /* Qty selector */
         .qty-selector {
             display: flex;
             align-items: center;
@@ -1194,7 +1198,6 @@
             color: var(--text-secondary);
         }
 
-        /* New Order Notification */
         .new-order-toast {
             position: fixed;
             top: 20px;
@@ -1228,7 +1231,6 @@
             50% { opacity: 0.3; }
         }
 
-        /* Currency selector */
         .currency-select {
             display: flex;
             gap: 1rem;
@@ -1269,12 +1271,6 @@
             opacity: 0.8;
         }
 
-        /* Glow text utility */
-        .glow-text {
-            text-shadow: 0 0 10px currentColor;
-        }
-
-        /* Notification badge */
         .notification-badge {
             position: absolute;
             top: -5px;
@@ -1303,8 +1299,11 @@
 
     <!-- Header -->
     <header class="header">
-        <h1>Everything You Need by Fjcoolcat</h1>
-        <div class="subtitle">Fjcoolcat's Minecraft Shop</div>
+        <div class="logo-container">
+            <img src="https://i.imgur.com/8Km9tLL.jpg" alt="Everything You Need Logo" class="logo-img" onerror="this.style.display='none'">
+            <h1>Everything You Need by Fjcoolcat</h1>
+            <div class="subtitle">Fjcoolcat's Minecraft Shop</div>
+        </div>
     </header>
 
     <!-- Navigation -->
@@ -1348,7 +1347,7 @@
             <button class="cart-close" onclick="toggleCart()">×</button>
             <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Your Cart</h2>
             <div id="cartItems"></div>
-            <div class="cart-total" id="cartTotal">Total: 0 Diamonds</div>
+            <div class="cart-total" id="cartTotal">Total: 0</div>
             <button class="checkout-btn" onclick="proceedCheckout()">Proceed to Checkout</button>
         </div>
     </div>
@@ -1360,22 +1359,22 @@
             <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Complete Your Order</h2>
             
             <div class="form-group">
-                <label>In-Game Username</label>
+                <label>In-Game Username *</label>
                 <input type="text" id="mcUsername" placeholder="Your Minecraft name..." required>
             </div>
 
             <div class="form-group">
-                <label>Discord Username</label>
+                <label>Discord Username *</label>
                 <input type="text" id="discordUser" placeholder="username#0000" required>
             </div>
 
             <div class="form-group">
-                <label>Delivery Coordinates (X Y Z)</label>
+                <label>Delivery Coordinates (X Y Z) *</label>
                 <input type="text" id="coords" placeholder="100 64 -200" required>
             </div>
 
             <div class="form-group">
-                <label>Delivery Dimension</label>
+                <label>Delivery Dimension *</label>
                 <select id="dimension" required>
                     <option value="Overworld">Overworld</option>
                     <option value="Nether Roof">Nether Roof</option>
@@ -1450,11 +1449,11 @@
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Item Name</label>
+                            <label>Item Name *</label>
                             <input type="text" id="itemName" placeholder="Diamond Sword...">
                         </div>
                         <div class="form-group">
-                            <label>Category</label>
+                            <label>Category *</label>
                             <select id="itemCategory">
                                 <option>Building Blocks</option>
                                 <option>Wood & Natural</option>
@@ -1470,7 +1469,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Currency Type</label>
+                        <label>Currency Type *</label>
                         <div class="currency-select">
                             <div class="currency-option selected" onclick="selectCurrency('diamonds')" id="curr-diamonds">
                                 <span class="currency-label">💎 Diamonds</span>
@@ -1486,11 +1485,11 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Price</label>
+                            <label>Price *</label>
                             <input type="number" id="itemPrice" placeholder="10" min="1">
                         </div>
                         <div class="form-group">
-                            <label>Quantity Per Purchase</label>
+                            <label>Quantity Per Purchase *</label>
                             <input type="number" id="itemQty" placeholder="64 (1 stack)" min="1">
                         </div>
                     </div>
@@ -1499,7 +1498,7 @@
                         <textarea id="itemDesc" rows="2" placeholder="Item description..."></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Stock Status</label>
+                        <label>Stock Status *</label>
                         <select id="itemStock">
                             <option value="true">In Stock</option>
                             <option value="false">Out of Stock</option>
@@ -1542,26 +1541,50 @@
     </div>
 
     <script>
-        // Data Storage
-        let items = JSON.parse(localStorage.getItem('shopItems')) || [
-            { id: 1, name: 'Elytra', category: 'Gear & Enchants', price: 40, quantity: 1, description: 'Rare elytra for gliding', inStock: true, currency: 'diamonds' },
-            { id: 2, name: 'Netherite Ingot', category: 'Nether', price: 2, quantity: 1, description: 'Netherite ingot for upgrading gear', inStock: true, currency: 'netherite' },
-            { id: 3, name: 'Heavy Core', category: 'Nether', price: 5, quantity: 1, description: 'Heavy core item', inStock: false, currency: 'diamonds' },
-            { id: 4, name: 'Dragon Head', category: 'Mob Drops', price: 35, quantity: 1, description: 'Rare dragon head trophy', inStock: true, currency: 'diamonds' },
-            { id: 5, name: 'Oak Wood Planks', category: 'Wood & Natural', price: 2, quantity: 64, description: '1 stack of oak wood planks', inStock: true, currency: 'diamonds' },
-            { id: 6, name: 'Redstone Dust', category: 'Redstone & Utility', price: 1, quantity: 64, description: '1 stack of redstone dust', inStock: true, currency: 'diamonds' },
-            { id: 7, name: 'Enchanted Golden Apple', category: 'Premium Items', price: 3, quantity: 1, description: 'God apple for emergencies', inStock: false, currency: 'netherite' },
-            { id: 8, name: 'Diamond Pickaxe (Efficiency V)', category: 'Gear & Enchants', price: 25, quantity: 1, description: 'Pre-enchanted pickaxe', inStock: true, currency: 'diamonds' }
-        ];
+        // Initialize data with default items if empty
+        function initData() {
+            const storedItems = localStorage.getItem('shopItems');
+            if (!storedItems) {
+                const defaultItems = [
+                    { id: 1, name: 'Elytra', category: 'Gear & Enchants', price: 40, quantity: 1, description: 'Rare elytra for gliding', inStock: true, currency: 'diamonds' },
+                    { id: 2, name: 'Netherite Ingot', category: 'Nether', price: 2, quantity: 1, description: 'Netherite ingot for upgrading gear', inStock: true, currency: 'netherite' },
+                    { id: 3, name: 'Heavy Core', category: 'Nether', price: 5, quantity: 1, description: 'Heavy core item', inStock: false, currency: 'diamonds' },
+                    { id: 4, name: 'Dragon Head', category: 'Mob Drops', price: 35, quantity: 1, description: 'Rare dragon head trophy', inStock: true, currency: 'diamonds' },
+                    { id: 5, name: 'Oak Wood Planks', category: 'Wood & Natural', price: 2, quantity: 64, description: '1 stack of oak wood planks', inStock: true, currency: 'diamonds' },
+                    { id: 6, name: 'Redstone Dust', category: 'Redstone & Utility', price: 1, quantity: 64, description: '1 stack of redstone dust', inStock: true, currency: 'diamonds' },
+                    { id: 7, name: 'Enchanted Golden Apple', category: 'Premium Items', price: 3, quantity: 1, description: 'God apple for emergencies', inStock: false, currency: 'netherite' },
+                    { id: 8, name: 'Diamond Pickaxe (Efficiency V)', category: 'Gear & Enchants', price: 25, quantity: 1, description: 'Pre-enchanted pickaxe', inStock: true, currency: 'diamonds' }
+                ];
+                localStorage.setItem('shopItems', JSON.stringify(defaultItems));
+            }
+            
+            const storedOrders = localStorage.getItem('shopOrders');
+            if (!storedOrders) {
+                localStorage.setItem('shopOrders', JSON.stringify([]));
+            }
+        }
 
-        let orders = JSON.parse(localStorage.getItem('shopOrders')) || [];
-        let cart = JSON.parse(localStorage.getItem('shopCart')) || [];
+        // Data Storage
+        let items = [];
+        let orders = [];
+        let cart = [];
         let currentCategory = 'all';
         let editingItem = null;
-        let lastOrderCount = orders.length;
+        let lastOrderCount = 0;
+        let orderCheckInterval = null;
+
+        // Load data from localStorage
+        function loadData() {
+            items = JSON.parse(localStorage.getItem('shopItems')) || [];
+            orders = JSON.parse(localStorage.getItem('shopOrders')) || [];
+            cart = JSON.parse(localStorage.getItem('shopCart')) || [];
+            lastOrderCount = orders.length;
+        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            initData();
+            loadData();
             renderItems();
             updateCartCount();
             startOrderPolling();
@@ -1729,7 +1752,6 @@
                 </div>
             `).join('');
 
-            // Calculate totals by currency
             const diamondTotal = cart.filter(i => (i.currency || 'diamonds') === 'diamonds').reduce((sum, item) => sum + (item.price * item.cartQty), 0);
             const netheriteTotal = cart.filter(i => i.currency === 'netherite').reduce((sum, item) => sum + (item.price * item.cartQty), 0);
             
@@ -1774,11 +1796,11 @@
         }
 
         function placeOrder() {
-            const mcUser = document.getElementById('mcUsername').value;
-            const discord = document.getElementById('discordUser').value;
-            const coords = document.getElementById('coords').value;
+            const mcUser = document.getElementById('mcUsername').value.trim();
+            const discord = document.getElementById('discordUser').value.trim();
+            const coords = document.getElementById('coords').value.trim();
             const dimension = document.getElementById('dimension').value;
-            const other = document.getElementById('otherInfo').value;
+            const other = document.getElementById('otherInfo').value.trim();
             const agreed = document.getElementById('agreeTerms').checked;
 
             if (!mcUser || !discord || !coords) {
@@ -1791,33 +1813,49 @@
                 return;
             }
 
+            // Create order object
             const order = {
                 id: Date.now(),
                 date: new Date().toLocaleString(),
-                items: [...cart],
-                customer: { mcUser, discord, coords, dimension, other },
-                total: cart.reduce((sum, item) => sum + (item.price * item.cartQty), 0),
+                items: JSON.parse(JSON.stringify(cart)), // Deep copy
+                customer: { 
+                    mcUser: mcUser, 
+                    discord: discord, 
+                    coords: coords, 
+                    dimension: dimension, 
+                    other: other 
+                },
                 status: 'pending'
             };
 
-            orders.unshift(order);
-            localStorage.setItem('shopOrders', JSON.stringify(orders));
+            // Save to localStorage
+            const currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
+            currentOrders.unshift(order);
+            localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
             
-            // Broadcast order update for other tabs
+            // Update local orders array
+            orders = currentOrders;
+            lastOrderCount = orders.length;
+            
+            // Broadcast update
             localStorage.setItem('lastOrderUpdate', Date.now().toString());
             
+            // Clear cart
             cart = [];
             saveCart();
             updateCartCount();
             
+            // Close checkout
             document.getElementById('checkoutForm').classList.remove('active');
             
+            // Show confirmation
             const confirm = document.getElementById('confirmation');
             confirm.classList.add('active');
             setTimeout(() => {
                 confirm.classList.remove('active');
             }, 2000);
 
+            // Reset form
             document.getElementById('mcUsername').value = '';
             document.getElementById('discordUser').value = '';
             document.getElementById('coords').value = '';
@@ -1827,45 +1865,47 @@
 
         // Real-time order updates
         function startOrderPolling() {
-            // Check for new orders every 2 seconds
-            setInterval(() => {
-                const storedOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
-                const storedCount = storedOrders.length;
-                
-                if (storedCount > lastOrderCount) {
-                    // New order detected!
-                    orders = storedOrders;
-                    lastOrderCount = storedCount;
-                    
-                    // Show notification if owner panel is open
-                    if (document.getElementById('ownerPanel').classList.contains('active')) {
-                        showNewOrderNotification();
-                        renderOrders();
-                    }
-                    
-                    // Update indicator
-                    document.getElementById('newOrderIndicator').style.display = 'inline';
-                    setTimeout(() => {
-                        document.getElementById('newOrderIndicator').style.display = 'none';
-                    }, 5000);
-                } else {
-                    orders = storedOrders;
-                }
-            }, 2000);
+            // Check immediately
+            checkForNewOrders();
+            
+            // Then check every 2 seconds
+            orderCheckInterval = setInterval(checkForNewOrders, 2000);
 
             // Listen for storage events from other tabs
             window.addEventListener('storage', (e) => {
-                if (e.key === 'lastOrderUpdate') {
-                    const storedOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
-                    orders = storedOrders;
-                    lastOrderCount = orders.length;
-                    
-                    if (document.getElementById('ownerPanel').classList.contains('active')) {
-                        showNewOrderNotification();
-                        renderOrders();
-                    }
+                if (e.key === 'shopOrders' || e.key === 'lastOrderUpdate') {
+                    checkForNewOrders();
                 }
             });
+        }
+
+        function checkForNewOrders() {
+            const storedOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
+            
+            if (storedOrders.length > lastOrderCount) {
+                // New order detected!
+                orders = storedOrders;
+                
+                // Show notification if owner panel is open
+                if (document.getElementById('ownerPanel').classList.contains('active')) {
+                    showNewOrderNotification();
+                    renderOrders();
+                }
+                
+                // Update indicator
+                const indicator = document.getElementById('newOrderIndicator');
+                if (indicator) {
+                    indicator.style.display = 'inline';
+                    setTimeout(() => {
+                        indicator.style.display = 'none';
+                    }, 5000);
+                }
+                
+                lastOrderCount = storedOrders.length;
+            } else {
+                orders = storedOrders;
+                lastOrderCount = storedOrders.length;
+            }
         }
 
         function showNewOrderNotification() {
@@ -1893,6 +1933,7 @@
             if (user === 'Owner21' && pass === '121') {
                 closeLogin();
                 document.getElementById('ownerPanel').classList.add('active');
+                loadData(); // Refresh data
                 lastOrderCount = orders.length;
                 renderOrders();
                 renderAdminItems();
@@ -1914,8 +1955,9 @@
             document.getElementById(`panel-${tab}`).classList.add('active');
             
             if (tab === 'orders') {
-                renderOrders();
+                loadData();
                 lastOrderCount = orders.length;
+                renderOrders();
             }
             if (tab === 'items') renderAdminItems();
         }
@@ -1923,6 +1965,8 @@
         // Orders Management
         function renderOrders() {
             const container = document.getElementById('ordersList');
+            loadData(); // Always refresh from localStorage
+            
             if (orders.length === 0) {
                 container.innerHTML = '<div class="empty-state">No orders yet</div>';
                 return;
@@ -1984,18 +2028,22 @@
         }
 
         function completeOrder(id) {
-            const order = orders.find(o => o.id === id);
+            const currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
+            const order = currentOrders.find(o => o.id === id);
             if (order) {
                 order.status = 'completed';
-                localStorage.setItem('shopOrders', JSON.stringify(orders));
+                localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
+                loadData();
                 renderOrders();
             }
         }
 
         function deleteOrder(id) {
             if (confirm('Delete this order permanently?')) {
-                orders = orders.filter(o => o.id !== id);
-                localStorage.setItem('shopOrders', JSON.stringify(orders));
+                let currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
+                currentOrders = currentOrders.filter(o => o.id !== id);
+                localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
+                loadData();
                 lastOrderCount = orders.length;
                 renderOrders();
             }
@@ -2003,6 +2051,7 @@
 
         // Item Management
         function renderAdminItems() {
+            loadData();
             const tbody = document.getElementById('adminItemsList');
             tbody.innerHTML = items.map(item => `
                 <tr>
@@ -2023,12 +2072,12 @@
         }
 
         function saveItem() {
-            const name = document.getElementById('itemName').value;
+            const name = document.getElementById('itemName').value.trim();
             const category = document.getElementById('itemCategory').value;
             const currency = document.getElementById('itemCurrency').value;
             const price = parseInt(document.getElementById('itemPrice').value);
             const quantity = parseInt(document.getElementById('itemQty').value);
-            const description = document.getElementById('itemDesc').value;
+            const description = document.getElementById('itemDesc').value.trim();
             const inStock = document.getElementById('itemStock').value === 'true';
 
             if (!name || !price || !quantity) {
@@ -2036,15 +2085,22 @@
                 return;
             }
 
+            let currentItems = JSON.parse(localStorage.getItem('shopItems')) || [];
+
             if (editingItem) {
-                const item = items.find(i => i.id === editingItem);
-                item.name = name;
-                item.category = category;
-                item.currency = currency;
-                item.price = price;
-                item.quantity = quantity;
-                item.description = description;
-                item.inStock = inStock;
+                const itemIndex = currentItems.findIndex(i => i.id === editingItem);
+                if (itemIndex !== -1) {
+                    currentItems[itemIndex] = {
+                        ...currentItems[itemIndex],
+                        name: name,
+                        category: category,
+                        currency: currency,
+                        price: price,
+                        quantity: quantity,
+                        description: description,
+                        inStock: inStock
+                    };
+                }
                 editingItem = null;
                 document.getElementById('formTitle').textContent = 'Add New Item';
                 document.getElementById('saveBtn').textContent = 'Add Item';
@@ -2052,24 +2108,26 @@
             } else {
                 const newItem = {
                     id: Date.now(),
-                    name,
-                    category,
-                    currency,
-                    price,
-                    quantity,
-                    description,
-                    inStock
+                    name: name,
+                    category: category,
+                    currency: currency,
+                    price: price,
+                    quantity: quantity,
+                    description: description,
+                    inStock: inStock
                 };
-                items.push(newItem);
+                currentItems.push(newItem);
             }
 
-            localStorage.setItem('shopItems', JSON.stringify(items));
+            localStorage.setItem('shopItems', JSON.stringify(currentItems));
+            loadData();
             clearForm();
             renderAdminItems();
             renderItems();
         }
 
         function editItem(id) {
+            loadData();
             const item = items.find(i => i.id === id);
             if (!item) return;
 
@@ -2081,7 +2139,6 @@
             document.getElementById('itemDesc').value = item.description;
             document.getElementById('itemStock').value = item.inStock.toString();
             
-            // Set currency
             const currency = item.currency || 'diamonds';
             selectCurrency(currency);
             document.getElementById('itemCurrency').value = currency;
@@ -2101,8 +2158,10 @@
 
         function deleteItem(id) {
             if (confirm('Delete this item?')) {
-                items = items.filter(i => i.id !== id);
-                localStorage.setItem('shopItems', JSON.stringify(items));
+                let currentItems = JSON.parse(localStorage.getItem('shopItems')) || [];
+                currentItems = currentItems.filter(i => i.id !== id);
+                localStorage.setItem('shopItems', JSON.stringify(currentItems));
+                loadData();
                 renderAdminItems();
                 renderItems();
             }
@@ -2120,7 +2179,7 @@
 
         // Announcements
         function updateAnnouncement() {
-            const text = document.getElementById('announceText').value;
+            const text = document.getElementById('announceText').value.trim();
             if (!text) return;
             
             localStorage.setItem('shopAnnouncement', text);
