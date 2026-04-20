@@ -1352,9 +1352,9 @@
 </head>
 <body>
 
-    <!-- New Order Toast -->
-    <div class="new-order-toast" id="newOrderToast">
-        New Order Received!
+    <!-- Status Toast (reused for new orders and owner actions) -->
+    <div class="new-order-toast" id="statusToast">
+        <span id="statusToastText">New Order Received!</span>
     </div>
 
     <!-- Header -->
@@ -1991,12 +1991,21 @@
             }
         }
 
-        function showNewOrderNotification() {
-            const toast = document.getElementById('newOrderToast');
+        let statusToastTimer = null;
+        function showToast(message, ms = 2200) {
+            const toast = document.getElementById('statusToast');
+            const textEl = document.getElementById('statusToastText');
+            if (!toast || !textEl) return;
+            textEl.textContent = message;
             toast.classList.add('show');
-            setTimeout(() => {
+            if (statusToastTimer) clearTimeout(statusToastTimer);
+            statusToastTimer = setTimeout(() => {
                 toast.classList.remove('show');
-            }, 4000);
+            }, ms);
+        }
+
+        function showNewOrderNotification() {
+            showToast('New Order Received!', 4000);
         }
 
         // Owner Panel
@@ -2131,14 +2140,13 @@
         }
 
         function deleteOrder(id) {
-            if (confirm('Delete this order permanently?')) {
-                let currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
-                currentOrders = currentOrders.filter(o => o.id !== id);
-                localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
-                loadData();
-                lastOrderCount = orders.length;
-                renderOrders();
-            }
+            let currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
+            currentOrders = currentOrders.filter(o => o.id !== id);
+            localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
+            loadData();
+            lastOrderCount = orders.length;
+            renderOrders();
+            showToast('Order deleted');
         }
 
         // Item Management
@@ -2173,9 +2181,11 @@
             const inStock = document.getElementById('itemStock').value === 'true';
 
             if (!name || !price || !quantity) {
-                alert('Please fill in all required fields!');
+                showToast('Please fill in Name, Price and Quantity');
                 return;
             }
+
+            const wasEditing = !!editingItem;
 
             let currentItems = JSON.parse(localStorage.getItem('shopItems')) || [];
 
@@ -2216,6 +2226,7 @@
             clearForm();
             renderAdminItems();
             renderItems();
+            showToast(wasEditing ? 'Item updated' : 'Item added');
         }
 
         function editItem(id) {
@@ -2249,14 +2260,13 @@
         }
 
         function deleteItem(id) {
-            if (confirm('Delete this item?')) {
-                let currentItems = JSON.parse(localStorage.getItem('shopItems')) || [];
-                currentItems = currentItems.filter(i => i.id !== id);
-                localStorage.setItem('shopItems', JSON.stringify(currentItems));
-                loadData();
-                renderAdminItems();
-                renderItems();
-            }
+            let currentItems = JSON.parse(localStorage.getItem('shopItems')) || [];
+            currentItems = currentItems.filter(i => i.id !== id);
+            localStorage.setItem('shopItems', JSON.stringify(currentItems));
+            loadData();
+            renderAdminItems();
+            renderItems();
+            showToast('Item deleted');
         }
 
         function clearForm() {
@@ -2288,14 +2298,14 @@
             const text = document.getElementById('announceText').value.trim();
             localStorage.setItem('shopAnnouncement', text);
             renderAnnouncement();
-            alert(text ? 'Announcement updated!' : 'Announcement cleared!');
+            showToast(text ? 'Announcement updated' : 'Announcement cleared');
         }
 
         function clearAnnouncement() {
             localStorage.removeItem('shopAnnouncement');
             document.getElementById('announceText').value = '';
             renderAnnouncement();
-            alert('Announcement cleared!');
+            showToast('Announcement cleared');
         }
 
         // Close overlays on escape
