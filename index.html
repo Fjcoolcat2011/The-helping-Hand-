@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Everything You Need - Minecraft Shop</title>
+    <title>Everything You Need by Fjcoolcat - Minecraft Shop</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -128,145 +128,222 @@
             text-shadow: 0 0 10px rgba(139, 148, 158, 0.2);
         }
 
+        /* ================================================================
+           Unified button system
+           ---------------------------------------------------------------
+           .btn            = base (sets height, radius, typography, motion)
+           .btn--primary   = filled accent button (main CTAs)
+           .btn--ghost     = outlined neutral button (nav, secondary actions)
+           .btn--owner     = owner admin button (red accent border)
+           .btn--danger    = destructive (delete / close ticket)
+           .btn--success   = affirmative (mark complete)
+           .btn--sm        = 30px height (table row actions)
+           .icon           = consistent 16px stroke icon
+           Legacy classes (.checkout-btn, .btn-refresh, .btn-secondary,
+           .btn-complete, .btn-delete, .btn-edit, .btn-remove,
+           .category-btn, .panel-tab, .filter-pill, .modal-tab,
+           .owner-login-btn, .cart-btn) are aliased onto this system below
+           so existing JS and HTML keep working. */
+
+        button { font-family: inherit; }
+
+        .btn, .owner-login-btn, .cart-btn, .category-btn,
+        .checkout-btn, .btn-refresh, .btn-secondary,
+        .btn-complete, .btn-delete, .panel-tab, .filter-pill, .modal-tab {
+            height: 38px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0 1rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            white-space: nowrap;
+            background: rgba(255,255,255,0.03);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease, color 0.15s ease;
+            user-select: none;
+        }
+        .btn:focus-visible, .owner-login-btn:focus-visible, .cart-btn:focus-visible,
+        .category-btn:focus-visible, .checkout-btn:focus-visible, .btn-refresh:focus-visible,
+        .btn-secondary:focus-visible, .btn-complete:focus-visible, .btn-delete:focus-visible {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 2px;
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: none; transform: none; box-shadow: none; }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.75;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex: 0 0 16px;
+        }
+
+        /* ---- Variants ---- */
+        .btn--ghost, .btn--ghost.owner-login-btn { /* (same as base) */ }
+        .btn--ghost:hover {
+            border-color: var(--accent-blue);
+            background: rgba(74,158,255,0.07);
+            color: var(--text-primary);
+        }
+        .btn--ghost:active { transform: translateY(1px); }
+
+        .btn--primary, .btn--cart {
+            background: linear-gradient(135deg, var(--accent-blue), var(--purple));
+            color: #fff;
+            border-color: transparent;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(74,158,255,0.3);
+        }
+        .btn--primary:hover, .btn--cart:hover {
+            filter: brightness(1.08);
+            box-shadow: 0 4px 16px rgba(74,158,255,0.45);
+        }
+        .btn--primary:active, .btn--cart:active { filter: brightness(0.95); }
+
+        .btn--owner {
+            border-color: rgba(248,81,73,0.45);
+            color: var(--text-primary);
+            background: rgba(248,81,73,0.06);
+        }
+        .btn--owner:hover {
+            border-color: var(--danger);
+            background: rgba(248,81,73,0.12);
+            box-shadow: 0 2px 10px rgba(248,81,73,0.25);
+            color: var(--text-primary);
+        }
+
+        .btn--danger {
+            background: linear-gradient(135deg, var(--danger), #da3633);
+            color: #fff;
+            border-color: transparent;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(248,81,73,0.3);
+        }
+        .btn--danger:hover { filter: brightness(1.08); box-shadow: 0 4px 14px rgba(248,81,73,0.45); }
+        .btn--danger:active { filter: brightness(0.95); }
+
+        .btn--success {
+            background: linear-gradient(135deg, var(--success), #2ea043);
+            color: #fff;
+            border-color: transparent;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(63,185,80,0.3);
+        }
+        .btn--success:hover { filter: brightness(1.08); box-shadow: 0 4px 14px rgba(63,185,80,0.45); }
+        .btn--success:active { filter: brightness(0.95); }
+
+        .btn--sm { height: 30px; padding: 0 0.75rem; font-size: 0.78rem; }
+
+        /* ---- Account-signed-in pill (subtle green outline) ---- */
+        #accountBtn[data-signed-in="true"] {
+            border-color: rgba(63,185,80,0.45);
+            background: rgba(63,185,80,0.07);
+        }
+        #accountBtn[data-signed-in="true"]:hover {
+            border-color: var(--success);
+            background: rgba(63,185,80,0.12);
+        }
+
+        /* ================================================================
+           Nav bar — two rows: primary actions, then category filters
+           ============================================================== */
         .nav-bar {
             background: rgba(17, 19, 24, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+            backdrop-filter: blur(14px);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 100;
-            flex-wrap: wrap;
-            gap: 1rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
         }
-
-        .category-buttons {
+        .nav-row {
             display: flex;
-            gap: 0.5rem;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.65rem 1.5rem;
+        }
+        .nav-row--actions {
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
             flex-wrap: wrap;
-            flex: 1;
+        }
+        .nav-row--categories {
+            padding: 0.55rem 1rem 0.55rem 1.5rem;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+        .nav-row--categories::-webkit-scrollbar { height: 6px; }
+        .nav-row--categories::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+        .nav-cluster {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .nav-cluster--tools   { justify-content: flex-start; }
+        .nav-cluster--account { justify-content: flex-end; gap: 0.4rem; }
+
+        /* Cart count badge */
+        .cart-count {
+            min-width: 22px;
+            height: 20px;
+            padding: 0 0.4rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.22);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 700;
         }
 
+        /* ---- Category pills (smaller, tighter, scroll-friendly) ---- */
+        .category-buttons {
+            display: inline-flex;
+            gap: 0.4rem;
+            flex-wrap: nowrap;
+            align-items: center;
+        }
         .category-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
+            height: 32px;
+            padding: 0 0.9rem;
+            font-size: 0.82rem;
+            border-radius: 999px;
             color: var(--text-secondary);
-            padding: 0.5rem 1rem;
-            font-family: inherit;
-            font-size: 0.875rem;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
+            background: transparent;
         }
-
-        .category-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .category-btn:hover::before {
-            left: 100%;
-        }
-
         .category-btn:hover {
             border-color: var(--accent-blue);
             color: var(--text-primary);
-            box-shadow: 0 0 15px var(--accent-blue-glow);
-            transform: translateY(-1px);
+            background: rgba(74,158,255,0.06);
         }
-
         .category-btn.active {
-            background: linear-gradient(135deg, var(--accent-blue), #357abd);
-            border-color: var(--accent-blue);
-            color: white;
-            box-shadow: 0 0 20px var(--accent-blue-glow);
+            background: linear-gradient(135deg, var(--accent-blue), var(--purple));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 2px 10px rgba(74,158,255,0.35);
         }
 
-        .nav-actions {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            align-items: center;
+        @media (max-width: 720px) {
+            .nav-row { padding: 0.55rem 1rem; gap: 0.6rem; }
+            .nav-row--actions { flex-direction: column; align-items: stretch; }
+            .nav-cluster--tools, .nav-cluster--account { width: 100%; justify-content: center; }
+            .nav-cluster--tools .btn, .nav-cluster--account .btn { flex: 1 1 140px; }
         }
-        .nav-actions .owner-login-btn.owner { background: linear-gradient(135deg, rgba(248,81,73,0.15), rgba(139,92,246,0.15)); border-color: rgba(248,81,73,0.5); }
-        .nav-actions .owner-login-btn.owner:hover { border-color: var(--danger); box-shadow: 0 4px 14px rgba(248,81,73,0.25); }
-        @media (max-width: 768px) {
-            .nav-actions { width: 100%; justify-content: center; }
-            .nav-actions .owner-login-btn { flex: 1 1 140px; }
-        }
-
-        .cart-btn {
-            background: linear-gradient(135deg, var(--accent-blue), #357abd);
-            border: none;
-            color: white;
-            padding: 0.6rem 1.2rem;
-            font-family: inherit;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-            box-shadow: 0 0 15px var(--accent-blue-glow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cart-btn { transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease; }
-        .cart-btn:active { transform: translateY(0); filter: brightness(0.95); }
-        .cart-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 25px var(--accent-blue-glow);
-        }
-
-        .cart-count {
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .owner-login-btn {
-            background: linear-gradient(135deg, rgba(74,158,255,0.12), rgba(139,92,246,0.12));
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.55rem 1.1rem;
-            font-family: inherit;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: 8px;
-            letter-spacing: 0.01em;
-            transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
-            backdrop-filter: blur(4px);
-        }
-        .owner-login-btn:hover {
-            transform: translateY(-1px);
-            border-color: var(--accent-blue);
-            background: linear-gradient(135deg, rgba(74,158,255,0.22), rgba(139,92,246,0.22));
-            box-shadow: 0 4px 14px rgba(74,158,255,0.25), 0 0 12px var(--accent-blue-glow);
-        }
-        .owner-login-btn:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(74,158,255,0.2); }
 
         .container {
             max-width: 1000px;
@@ -567,19 +644,17 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
 
+        /* Primary action — larger than nav buttons */
         .checkout-btn {
             width: 100%;
+            height: 48px;
             background: linear-gradient(135deg, var(--accent-blue), var(--purple));
             border: none;
             color: white;
-            padding: 0.875rem 1rem;
-            font-family: inherit;
+            padding: 0 1.25rem;
             font-size: 1rem;
             font-weight: 600;
             letter-spacing: 0.02em;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
             box-shadow: 0 4px 18px rgba(74,158,255,0.35);
         }
         .checkout-btn:hover {
@@ -588,7 +663,7 @@
             box-shadow: 0 8px 26px rgba(74,158,255,0.5);
         }
         .checkout-btn:active { transform: translateY(0); filter: brightness(0.95); }
-        .checkout-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; filter: none; }
+        .checkout-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; filter: none; box-shadow: none; }
 
         .checkout-form {
             display: none;
@@ -840,13 +915,8 @@
             background: rgba(255,255,255,0.02);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            padding: 0.55rem 1.1rem;
-            font-family: inherit;
+            padding: 0 1.1rem;
             font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
         }
         .panel-tab:hover {
             color: var(--text-primary);
@@ -998,45 +1068,43 @@
             display: flex;
             gap: 0.5rem;
             margin-top: 1rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-color);
         }
 
         .btn-complete {
             background: linear-gradient(135deg, var(--success), #2ea043);
             border: none;
             color: white;
-            padding: 0.5rem 1rem;
-            font-family: inherit;
+            padding: 0 1rem;
             font-size: 0.875rem;
-            cursor: pointer;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.3s;
-            box-shadow: 0 0 10px var(--success-glow);
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(63,185,80,0.35);
         }
-
         .btn-complete:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px var(--success-glow);
+            transform: translateY(-1px);
+            filter: brightness(1.08);
+            box-shadow: 0 4px 16px rgba(63,185,80,0.5);
         }
+        .btn-complete:active { transform: translateY(0); filter: brightness(0.95); }
 
         .btn-delete {
             background: linear-gradient(135deg, var(--danger), #da3633);
             border: none;
             color: white;
-            padding: 0.5rem 1rem;
-            font-family: inherit;
+            padding: 0 1rem;
             font-size: 0.875rem;
-            cursor: pointer;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.3s;
-            box-shadow: 0 0 10px var(--danger-glow);
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(248,81,73,0.35);
         }
-
         .btn-delete:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px var(--danger-glow);
+            transform: translateY(-1px);
+            filter: brightness(1.08);
+            box-shadow: 0 4px 16px rgba(248,81,73,0.5);
         }
+        .btn-delete:active { transform: translateY(0); filter: brightness(0.95); }
 
         .admin-form {
             background: var(--bg-card);
@@ -1089,44 +1157,46 @@
             background: rgba(255,255,255,0.02);
         }
 
-        .btn-edit {
-            background: linear-gradient(135deg, var(--accent-blue), #357abd);
-            border: none;
+        /* Admin table row actions — compact icon+label buttons */
+        .btn-edit, .btn-remove {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            height: 30px;
+            padding: 0 0.75rem;
+            border: 1px solid transparent;
             color: white;
-            padding: 0.35rem 0.75rem;
             font-family: inherit;
             font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
             cursor: pointer;
-            border-radius: 4px;
-            margin-right: 0.5rem;
-            font-weight: 500;
-            transition: all 0.3s;
-            box-shadow: 0 0 8px var(--accent-blue-glow);
+            border-radius: 6px;
+            margin-right: 0.4rem;
+            transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
         }
-
+        .btn-edit {
+            background: linear-gradient(135deg, var(--accent-blue), var(--purple));
+            box-shadow: 0 2px 8px rgba(74,158,255,0.3);
+        }
         .btn-edit:hover {
             transform: translateY(-1px);
-            box-shadow: 0 0 15px var(--accent-blue-glow);
+            filter: brightness(1.08);
+            box-shadow: 0 4px 14px rgba(74,158,255,0.45);
         }
-
+        .btn-edit:active { transform: translateY(0); filter: brightness(0.95); }
         .btn-remove {
             background: linear-gradient(135deg, var(--danger), #da3633);
-            border: none;
-            color: white;
-            padding: 0.35rem 0.75rem;
-            font-family: inherit;
-            font-size: 0.75rem;
-            cursor: pointer;
-            border-radius: 4px;
-            font-weight: 500;
-            transition: all 0.3s;
-            box-shadow: 0 0 8px var(--danger-glow);
+            box-shadow: 0 2px 8px rgba(248,81,73,0.3);
+            margin-right: 0;
         }
-
         .btn-remove:hover {
             transform: translateY(-1px);
-            box-shadow: 0 0 15px var(--danger-glow);
+            filter: brightness(1.08);
+            box-shadow: 0 4px 14px rgba(248,81,73,0.45);
         }
+        .btn-remove:active { transform: translateY(0); filter: brightness(0.95); }
 
         ::-webkit-scrollbar {
             width: 8px;
@@ -1171,16 +1241,13 @@
         /* Filter pills (orders) */
         .filter-pills { display: flex; gap: 0.35rem; flex-wrap: wrap; }
         .filter-pill {
+            height: 32px;
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            padding: 0.35rem 0.85rem;
+            padding: 0 0.9rem;
             border-radius: 999px;
-            font-family: inherit;
             font-size: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.18s ease;
         }
         .filter-pill:hover {
             color: var(--text-primary);
@@ -1204,45 +1271,63 @@
         }
         .orders-diag .orders-diag-actions { margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
-        /* Orders Toolbar */
+        /* Orders Toolbar — grouped: [actions] [filters] ... [count] */
         .orders-toolbar {
             display: flex;
             align-items: center;
             gap: 0.75rem;
             margin-bottom: 1rem;
             flex-wrap: wrap;
+            padding: 0.6rem 0.75rem;
+            background: rgba(255,255,255,0.015);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+        }
+        .orders-toolbar > .toolbar-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .orders-toolbar > .toolbar-right {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .toolbar-separator {
+            width: 1px;
+            height: 22px;
+            background: var(--border-color);
+            opacity: 0.7;
         }
         .orders-count {
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            font-size: 0.85rem;
+            font-variant-numeric: tabular-nums;
+        }
+        @media (max-width: 600px) {
+            .orders-toolbar > .toolbar-right { margin-left: 0; width: 100%; justify-content: flex-end; }
+            .toolbar-separator { display: none; }
         }
         .btn-refresh {
             background: linear-gradient(135deg, var(--accent-blue), var(--purple));
             border: none;
             color: white;
-            padding: 0.5rem 1rem;
-            font-family: inherit;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: 8px;
+            padding: 0 1rem;
             font-size: 0.85rem;
-            box-shadow: 0 2px 10px rgba(74,158,255,0.3);
-            transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+            font-weight: 600;
+            box-shadow: 0 2px 12px rgba(74,158,255,0.35);
         }
-        .btn-refresh:hover { transform: translateY(-1px); filter: brightness(1.08); box-shadow: 0 4px 16px rgba(74,158,255,0.45); }
-        .btn-refresh:active { transform: translateY(0); }
+        .btn-refresh:hover { transform: translateY(-1px); filter: brightness(1.08); box-shadow: 0 4px 18px rgba(74,158,255,0.5); }
+        .btn-refresh:active { transform: translateY(0); filter: brightness(0.95); }
 
         .btn-secondary {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 0.5rem 1rem;
-            font-family: inherit;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: 8px;
+            padding: 0 1rem;
             font-size: 0.85rem;
-            transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
         }
         .btn-secondary:hover {
             border-color: var(--accent-blue);
@@ -1251,6 +1336,19 @@
             box-shadow: 0 2px 10px rgba(74,158,255,0.2);
         }
         .btn-secondary:active { transform: translateY(0); }
+
+        /* Inline grouped buttons (toolbars, order cards) */
+        .btn-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .btn-icon, .btn-label {
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-icon { font-size: 1rem; line-height: 1; }
 
         @media (max-width: 768px) {
             .header h1 { font-size: 2rem; }
@@ -1486,13 +1584,13 @@
         .modal-tab {
             background: transparent;
             border: none;
-            color: var(--text-secondary);
-            padding: 0.5rem 0.75rem;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.875rem;
             border-bottom: 2px solid transparent;
+            border-radius: 6px 6px 0 0;
+            color: var(--text-secondary);
+            padding: 0 0.9rem;
+            font-size: 0.875rem;
         }
+        .modal-tab:hover { color: var(--text-primary); background: rgba(74,158,255,0.06); }
         .modal-tab.active {
             color: var(--text-primary);
             border-bottom-color: var(--accent-blue);
@@ -1690,29 +1788,52 @@
         </div>
     </div>
 
-    <!-- Navigation -->
+    <!-- Navigation : Row 1 (primary actions) + Row 2 (category filters) -->
     <nav class="nav-bar">
-        <div class="category-buttons">
-            <button class="category-btn active" onclick="filterCategory('all')">All Items</button>
-            <button class="category-btn" onclick="filterCategory('Building Blocks')">Building Blocks</button>
-            <button class="category-btn" onclick="filterCategory('Wood & Natural')">Wood & Natural</button>
-            <button class="category-btn" onclick="filterCategory('Nether')">Nether</button>
-            <button class="category-btn" onclick="filterCategory('Special Blocks')">Special Blocks</button>
-            <button class="category-btn" onclick="filterCategory('Mob Drops')">Mob Drops</button>
-            <button class="category-btn" onclick="filterCategory('Redstone & Utility')">Redstone & Utility</button>
-            <button class="category-btn" onclick="filterCategory('Food & Farming')">Food & Farming</button>
-            <button class="category-btn" onclick="filterCategory('Premium Items')">Premium Items</button>
-            <button class="category-btn" onclick="filterCategory('Gear & Enchants')">Gear & Enchants</button>
+        <!-- Row 1 : primary actions -->
+        <div class="nav-row nav-row--actions">
+            <div class="nav-cluster nav-cluster--tools">
+                <button class="btn btn--ghost" onclick="openNetherCalc()" title="Overworld ↔ Nether coordinate converter">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none" opacity="0.15"></polygon><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                    <span>Nether calculator</span>
+                </button>
+                <button class="btn btn--ghost" onclick="openTickets()" title="Submit or view support tickets">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <span>Support</span>
+                </button>
+            </div>
+
+            <div class="nav-cluster nav-cluster--account">
+                <button class="btn btn--ghost" id="accountBtn" onclick="openAccount()" title="Sign in or create an account">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <span class="btn-label">Sign in</span>
+                </button>
+                <button class="btn btn--primary btn--cart" onclick="toggleCart()" title="View cart">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span>Cart</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="btn btn--ghost btn--owner" onclick="showLogin()" title="Owner admin panel">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span>Owner</span>
+                </button>
+            </div>
         </div>
-        <div class="nav-actions">
-            <button class="cart-btn" onclick="toggleCart()" style="position: relative;">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
-                <span class="cart-count" id="cartCount">0</span>
-            </button>
-            <button class="owner-login-btn" onclick="openNetherCalc()" title="Overworld ↔ Nether coordinate converter">🧭 Nether Calc</button>
-            <button class="owner-login-btn" onclick="openTickets()" title="Submit or view support tickets">🎫 Tickets</button>
-            <button class="owner-login-btn" id="accountBtn" onclick="openAccount()" title="Sign in or create an account">👤 Sign In</button>
-            <button class="owner-login-btn owner" onclick="showLogin()" title="Owner-only admin panel">🔒 Owner</button>
+
+        <!-- Row 2 : category filters -->
+        <div class="nav-row nav-row--categories">
+            <div class="category-buttons">
+                <button class="category-btn active" onclick="filterCategory('all')">All items</button>
+                <button class="category-btn" onclick="filterCategory('Building Blocks')">Building blocks</button>
+                <button class="category-btn" onclick="filterCategory('Wood & Natural')">Wood &amp; natural</button>
+                <button class="category-btn" onclick="filterCategory('Nether')">Nether</button>
+                <button class="category-btn" onclick="filterCategory('Special Blocks')">Special blocks</button>
+                <button class="category-btn" onclick="filterCategory('Mob Drops')">Mob drops</button>
+                <button class="category-btn" onclick="filterCategory('Redstone & Utility')">Redstone &amp; utility</button>
+                <button class="category-btn" onclick="filterCategory('Food & Farming')">Food &amp; farming</button>
+                <button class="category-btn" onclick="filterCategory('Premium Items')">Premium items</button>
+                <button class="category-btn" onclick="filterCategory('Gear & Enchants')">Gear &amp; enchants</button>
+            </div>
         </div>
     </nav>
 
@@ -1932,13 +2053,21 @@
             <div class="panel-section active" id="panel-orders" data-filter="all">
                 <h2 style="margin-bottom: 1rem; font-size: 1.25rem;">Incoming Orders <span id="newOrderIndicator" style="display: none; color: var(--success); font-size: 0.875rem; margin-left: 0.5rem;">● New!</span></h2>
                 <div class="orders-toolbar">
-                    <button class="btn-refresh" onclick="renderOrders()">↻ Refresh Orders</button>
-                    <div class="filter-pills" id="orderFilterPills">
-                        <button class="filter-pill active" data-filter="all" onclick="setOrderFilter('all')">All</button>
-                        <button class="filter-pill" data-filter="pending" onclick="setOrderFilter('pending')">Pending</button>
-                        <button class="filter-pill" data-filter="completed" onclick="setOrderFilter('completed')">Completed</button>
+                    <div class="toolbar-left">
+                        <button class="btn btn--primary" onclick="renderOrders()">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                            <span>Refresh</span>
+                        </button>
+                        <span class="toolbar-separator" aria-hidden="true"></span>
+                        <div class="filter-pills" id="orderFilterPills" role="tablist" aria-label="Filter orders by status">
+                            <button class="filter-pill active" data-filter="all" onclick="setOrderFilter('all')">All</button>
+                            <button class="filter-pill" data-filter="pending" onclick="setOrderFilter('pending')">Pending</button>
+                            <button class="filter-pill" data-filter="completed" onclick="setOrderFilter('completed')">Completed</button>
+                        </div>
                     </div>
-                    <span class="orders-count" id="ordersCount">0 orders in local storage</span>
+                    <div class="toolbar-right">
+                        <span class="orders-count" id="ordersCount">0 orders</span>
+                    </div>
                 </div>
                 <div id="ordersDiag" class="orders-diag" style="display:none;"></div>
                 <div id="ordersList"></div>
@@ -2033,8 +2162,15 @@
             <div class="panel-section" id="panel-tickets">
                 <h2 style="margin-bottom: 1rem; font-size: 1.25rem;">Support Tickets</h2>
                 <div class="orders-toolbar">
-                    <button class="btn-refresh" onclick="renderOwnerTickets()">↻ Refresh Tickets</button>
-                    <span class="orders-count" id="ticketsCount">0 tickets</span>
+                    <div class="toolbar-left">
+                        <button class="btn btn--primary" onclick="renderOwnerTickets()">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                            <span>Refresh</span>
+                        </button>
+                    </div>
+                    <div class="toolbar-right">
+                        <span class="orders-count" id="ticketsCount">0 tickets</span>
+                    </div>
                 </div>
                 <div id="ownerTicketsList"></div>
             </div>
@@ -2558,9 +2694,11 @@
                 `;
             }).join('') || '<div class="order-item-row" style="opacity:0.7;"><span>No items recorded</span><span>—</span></div>';
 
+            const ICON_REOPEN = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>';
+            const ICON_CHECK  = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>';
             const completeBtn = status === 'completed'
-                ? `<button class="btn-secondary" onclick="reopenOrder(${JSON.stringify(id)})">↺ Reopen</button>`
-                : `<button class="btn-complete" onclick="completeOrder(${JSON.stringify(id)})">✓ Mark Complete</button>`;
+                ? `<button class="btn btn--ghost" onclick="reopenOrder(${JSON.stringify(id)})">${ICON_REOPEN}<span>Reopen</span></button>`
+                : `<button class="btn btn--success" onclick="completeOrder(${JSON.stringify(id)})">${ICON_CHECK}<span>Mark complete</span></button>`;
 
             return `
                 <div class="order-card">
@@ -2583,7 +2721,10 @@
                     </div>
                     <div class="order-actions">
                         ${completeBtn}
-                        <button class="btn-delete" onclick="deleteOrder(${JSON.stringify(id)})">🗑 Delete</button>
+                        <button class="btn btn--danger" onclick="deleteOrder(${JSON.stringify(id)})">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            <span>Delete</span>
+                        </button>
                     </div>
                 </div>
             `;
@@ -2719,8 +2860,14 @@
                     <td>${item.quantity}</td>
                     <td><span class="stock-badge ${item.inStock ? 'in-stock' : 'out-stock'}">${item.inStock ? 'Yes' : 'No'}</span></td>
                     <td>
-                        <button class="btn-edit" onclick="editItem(${item.id})">Edit</button>
-                        <button class="btn-remove" onclick="deleteItem(${item.id})">Delete</button>
+                        <button class="btn btn--ghost btn--sm" onclick="editItem(${item.id})" title="Edit item">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path></svg>
+                            <span>Edit</span>
+                        </button>
+                        <button class="btn btn--danger btn--sm" onclick="deleteItem(${item.id})" title="Delete item">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            <span>Delete</span>
+                        </button>
                     </td>
                 </tr>
             `).join('');
@@ -2968,7 +3115,16 @@
             const user = getCurrentUser();
             const btn = document.getElementById('accountBtn');
             if (!btn) return;
-            btn.textContent = user ? `👤 ${user}` : '👤 Sign In';
+            const userIcon = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
+            if (user) {
+                btn.innerHTML = `${userIcon}<span class="btn-label">${escapeHtml(user)}</span>`;
+                btn.setAttribute('data-signed-in', 'true');
+                btn.title = `Signed in as ${user} — click to manage account`;
+            } else {
+                btn.innerHTML = `${userIcon}<span class="btn-label">Sign in</span>`;
+                btn.removeAttribute('data-signed-in');
+                btn.title = 'Sign in or create an account';
+            }
         }
         function openAccount() {
             const user = getCurrentUser();
