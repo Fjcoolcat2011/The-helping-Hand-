@@ -3,104 +3,2198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Singularity - Minecraft Shop</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Everything You Need by Fjcoolcat - Minecraft Shop</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0c10;
+            --bg-secondary: #111318;
+            --bg-card: #161922;
+            --accent-blue: #4a9eff;
+            --accent-blue-glow: rgba(74, 158, 255, 0.4);
+            --accent-cyan: #00d4ff;
+            --accent-cyan-glow: rgba(0, 212, 255, 0.4);
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --border-color: #21262d;
+            --success: #3fb950;
+            --success-glow: rgba(63, 185, 80, 0.3);
+            --danger: #f85149;
+            --danger-glow: rgba(248, 81, 73, 0.3);
+            --warning: #d29922;
+            --warning-glow: rgba(212, 153, 34, 0.3);
+            --purple: #a371f7;
+            --purple-glow: rgba(163, 113, 247, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(74, 158, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(163, 113, 247, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .header {
+            background: linear-gradient(180deg, #0d1117 0%, var(--bg-primary) 100%);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-blue);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-blue), transparent);
+            animation: scanline 3s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-blue);
+            box-shadow: 0 0 30px var(--accent-blue-glow);
+            object-fit: cover;
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { box-shadow: 0 0 30px var(--accent-blue-glow); }
+            50% { box-shadow: 0 0 50px var(--accent-blue-glow), 0 0 80px rgba(74, 158, 255, 0.2); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px var(--accent-blue-glow);
+            letter-spacing: -0.5px;
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+            text-shadow: 0 0 10px rgba(139, 148, 158, 0.2);
+        }
+
+        .nav-bar {
+            background: rgba(17, 19, 24, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .category-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .category-btn:hover::before {
+            left: 100%;
+        }
+
+        .category-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+            box-shadow: 0 0 15px var(--accent-blue-glow);
+            transform: translateY(-1px);
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, var(--accent-blue), #357abd);
+            border-color: var(--accent-blue);
+            color: white;
+            box-shadow: 0 0 20px var(--accent-blue-glow);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .cart-btn {
+            background: linear-gradient(135deg, var(--accent-blue), #357abd);
+            border: none;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px var(--accent-blue-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px var(--accent-blue-glow);
+        }
+
+        .cart-count {
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .owner-login-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.6rem 1.2rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .owner-login-btn:hover {
+            border-color: var(--purple);
+            color: var(--purple);
+            box-shadow: 0 0 15px var(--purple-glow);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-left: 0.75rem;
+            border-left: 3px solid var(--success);
+            text-shadow: 0 0 10px var(--success-glow);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px var(--accent-blue-glow);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .place-order-btn {
+            background: linear-gradient(135deg, var(--accent-blue), #357abd);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px var(--accent-blue-glow);
+        }
+
+        .place-order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px var(--accent-blue-glow);
+        }
+
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .item-row {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-row::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-blue), var(--accent-cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .item-row:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .item-row:hover::before {
+            opacity: 1;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .item-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .tag-item {
+            background: rgba(74, 158, 255, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(74, 158, 255, 0.3);
+            box-shadow: 0 0 8px rgba(74, 158, 255, 0.1);
+        }
+
+        .tag-floor {
+            background: rgba(212, 153, 34, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(212, 153, 34, 0.3);
+            box-shadow: 0 0 8px var(--warning-glow);
+        }
+
+        .tag-category {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(63, 185, 80, 0.3);
+            box-shadow: 0 0 8px var(--success-glow);
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding-left: 1.5rem;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .item-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .currency-icon {
+            color: var(--accent-cyan);
+            text-shadow: 0 0 8px var(--accent-cyan-glow);
+        }
+
+        .stock-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .in-stock {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(63, 185, 80, 0.3);
+            box-shadow: 0 0 10px var(--success-glow);
+        }
+
+        .out-stock {
+            background: rgba(248, 81, 73, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(248, 81, 73, 0.3);
+            box-shadow: 0 0 10px var(--danger-glow);
+        }
+
+        .add-cart-btn {
+            background: linear-gradient(135deg, var(--accent-blue), #357abd);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px var(--accent-blue-glow);
+        }
+
+        .add-cart-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--accent-blue-glow);
+        }
+
+        .add-cart-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .cart-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 12, 16, 0.95);
+            z-index: 1000;
+            padding: 2rem;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .cart-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .cart-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 700px;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .cart-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .cart-close:hover {
+            background: rgba(248, 81, 73, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+            box-shadow: 0 0 10px var(--danger-glow);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .cart-item:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px rgba(74, 158, 255, 0.1);
+        }
+
+        .cart-total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-align: right;
+            margin: 1.5rem 0;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-primary);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-blue), #357abd);
+            border: none;
+            color: white;
+            padding: 0.875rem;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px var(--accent-blue-glow);
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px var(--accent-blue-glow);
+        }
+
+        .checkout-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 12, 16, 0.98);
+            z-index: 2000;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .checkout-form.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .checkout-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px var(--accent-blue-glow);
+        }
+
+        .terms-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            line-height: 1.6;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-blue);
+        }
+
+        .confirmation {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 12, 16, 0.98);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .confirmation.active {
+            display: flex;
+        }
+
+        .confirmation h2 {
+            font-size: 2.5rem;
+            color: var(--success);
+            text-shadow: 0 0 30px var(--success-glow);
+            animation: confirmPop 0.5s ease-out;
+        }
+
+        @keyframes confirmPop {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .login-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 12, 16, 0.95);
+            z-index: 1500;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-overlay.active {
+            display: flex;
+        }
+
+        .login-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-box h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 0.875rem;
+            margin-bottom: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .login-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px var(--accent-blue-glow);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: linear-gradient(135deg, var(--accent-blue), #357abd);
+            border: none;
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px var(--accent-blue-glow);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px var(--accent-blue-glow);
+        }
+
+        .login-error {
+            color: var(--danger);
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            display: none;
+            text-shadow: 0 0 10px var(--danger-glow);
+        }
+
+        .owner-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .owner-panel.active {
+            display: block;
+        }
+
+        .panel-header {
+            background: var(--bg-secondary);
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-header h2 {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-nav {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .panel-tab {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .panel-tab.active, .panel-tab:hover {
+            background: linear-gradient(135deg, var(--accent-blue), #357abd);
+            border-color: var(--accent-blue);
+            color: white;
+            box-shadow: 0 0 15px var(--accent-blue-glow);
+        }
+
+        .panel-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .panel-section {
+            display: none;
+        }
+
+        .panel-section.active {
+            display: block;
+        }
+
+        .order-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-blue), var(--accent-cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .order-card:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.1);
+        }
+
+        .order-card:hover::before {
+            opacity: 1;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .order-id {
+            color: var(--accent-blue);
+            font-weight: 600;
+            text-shadow: 0 0 10px var(--accent-blue-glow);
+        }
+
+        .order-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: rgba(212, 153, 34, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(212, 153, 34, 0.3);
+            box-shadow: 0 0 10px var(--warning-glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .status-completed {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(63, 185, 80, 0.3);
+            box-shadow: 0 0 10px var(--success-glow);
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-detail-item {
+            background: var(--bg-secondary);
+            padding: 0.625rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        .order-detail-item strong {
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .order-items-list {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .order-items-list strong {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-complete {
+            background: linear-gradient(135deg, var(--success), #2ea043);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px var(--success-glow);
+        }
+
+        .btn-complete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--success-glow);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, var(--danger), #da3633);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px var(--danger-glow);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--danger-glow);
+        }
+
+        .admin-form {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-form h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.25rem;
+            font-size: 1.125rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1.5rem;
+        }
+
+        .admin-table th {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 0.875rem;
+            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .admin-table td {
+            padding: 0.875rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+        .admin-table tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, var(--accent-blue), #357abd);
+            border: none;
+            color: white;
+            padding: 0.35rem 0.75rem;
+            font-family: inherit;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 0 8px var(--accent-blue-glow);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px var(--accent-blue-glow);
+        }
+
+        .btn-remove {
+            background: linear-gradient(135deg, var(--danger), #da3633);
+            border: none;
+            color: white;
+            padding: 0.35rem 0.75rem;
+            font-family: inherit;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 0 8px var(--danger-glow);
+        }
+
+        .btn-remove:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px var(--danger-glow);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a4d55;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .logo-img { width: 80px; height: 80px; }
+            .item-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .item-actions { 
+                width: 100%; 
+                padding-left: 0; 
+                border-left: none; 
+                border-top: 1px solid var(--border-color);
+                padding-top: 1rem;
+                justify-content: space-between;
+            }
+            .nav-bar { padding: 1rem; }
+        }
+
+        .qty-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .qty-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 28px;
+            height: 28px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .qty-btn:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+            box-shadow: 0 0 10px var(--accent-blue-glow);
+        }
+
+        .qty-display {
+            font-size: 0.875rem;
+            min-width: 24px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .remove-cart-item {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--danger);
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .remove-cart-item:hover {
+            background: rgba(248, 81, 73, 0.1);
+            border-color: var(--danger);
+            box-shadow: 0 0 10px var(--danger-glow);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .new-order-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--success), #2ea043);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 0 30px var(--success-glow);
+            z-index: 5000;
+            transform: translateX(400px);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .new-order-toast.show {
+            transform: translateX(0);
+        }
+
+        .new-order-toast::before {
+            content: '●';
+            color: #fff;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .currency-select {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .currency-option {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            color: var(--text-secondary);
+        }
+
+        .currency-option:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .currency-option.selected {
+            border-color: var(--accent-blue);
+            background: rgba(74, 158, 255, 0.1);
+            color: var(--accent-blue);
+            box-shadow: 0 0 15px var(--accent-blue-glow);
+        }
+
+        .currency-option .currency-label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .currency-option .currency-desc {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--danger-glow);
+            animation: pulse 2s infinite;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Singularity</h1>
-            <p class="tagline">Grawmpy and dxzy's Minecraft Shop</p>
+
+    <!-- New Order Toast -->
+    <div class="new-order-toast" id="newOrderToast">
+        New Order Received!
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="https://i.imgur.com/8Km9tLL.jpg" alt="Everything You Need Logo" class="logo-img" onerror="this.style.display='none'">
+            <h1>Everything You Need by Fjcoolcat</h1>
+            <div class="subtitle">Fjcoolcat's Minecraft Shop</div>
         </div>
     </header>
 
-    <main>
-        <div class="container">
-            <section class="shop-section">
-                <h2>Available Items</h2>
-
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search items..." class="search-input">
-                    <button class="order-btn" id="orderBtn">Place Order</button>
-                </div>
-
-                <div class="filters" id="filtersContainer">
-                    <button class="filter-btn active" data-filter="all">All Items</button>
-                </div>
-
-                <div class="loading" id="loading" style="display: none;">
-                    <div class="spinner"></div>
-                    <p>Loading shop data...</p>
-                </div>
-
-                <div class="items-grid" id="itemsGrid">
-                    <!-- Items will be populated by JavaScript -->
-                </div>
-
-                <div class="no-results" id="noResults" style="display: none;">
-                    <p>No items found matching your search.</p>
-                </div>
-            </section>
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="category-buttons">
+            <button class="category-btn active" onclick="filterCategory('all')">All Items</button>
+            <button class="category-btn" onclick="filterCategory('Building Blocks')">Building Blocks</button>
+            <button class="category-btn" onclick="filterCategory('Wood & Natural')">Wood & Natural</button>
+            <button class="category-btn" onclick="filterCategory('Nether')">Nether</button>
+            <button class="category-btn" onclick="filterCategory('Special Blocks')">Special Blocks</button>
+            <button class="category-btn" onclick="filterCategory('Mob Drops')">Mob Drops</button>
+            <button class="category-btn" onclick="filterCategory('Redstone & Utility')">Redstone & Utility</button>
+            <button class="category-btn" onclick="filterCategory('Food & Farming')">Food & Farming</button>
+            <button class="category-btn" onclick="filterCategory('Premium Items')">Premium Items</button>
+            <button class="category-btn" onclick="filterCategory('Gear & Enchants')">Gear & Enchants</button>
         </div>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 Singularity Minecraft Shop. All rights reserved.</p>
-            <p class="footer-note">Minecraft is a trademark of Mojang Studios.</p>
+        <div class="nav-actions">
+            <button class="cart-btn" onclick="toggleCart()" style="position: relative;">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+            <button class="owner-login-btn" onclick="showLogin()">Owner Panel</button>
         </div>
-    </footer>
+    </nav>
 
-    <!-- Order Modal -->
-    <div class="modal" id="orderModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Place an Order</h2>
-                <button class="modal-close" id="closeModal">&times;</button>
-            </div>
-            
-            <div class="modal-warning">
-                ⚠️ <strong>WARNING:</strong> Placing fake orders is strictly bannable. Only place genuine orders.
-            </div>
+    <!-- Main Container -->
+    <div class="container">
+        <h2 class="section-title">Available Items</h2>
+        
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search items..." onkeyup="searchItems()">
+            <button class="place-order-btn" onclick="toggleCart()">Place Order</button>
+        </div>
 
-            <form id="orderForm">
-                <div class="form-group">
-                    <label for="minecraftUsername">Minecraft Username *</label>
-                    <input type="text" id="minecraftUsername" name="minecraftUsername" required placeholder="Your in-game name">
-                </div>
+        <div class="items-list" id="itemsList"></div>
+    </div>
 
-                <div class="form-group">
-                    <label for="discordUsername">Discord Username *</label>
-                    <input type="text" id="discordUsername" name="discordUsername" required placeholder="Your Discord username">
-                </div>
-
-                <div class="form-group">
-                    <label for="itemInput">Item Required *</label>
-                    <input type="text" id="itemInput" name="itemInput" required placeholder="e.g., Elytra, Netherite Ingot">
-                </div>
-
-                <div class="form-group">
-                    <label for="unitType">Unit Type *</label>
-                    <select id="unitType" name="unitType" required>
-                        <option value="item">Items</option>
-                        <option value="stack">Stacks</option>
-                        <option value="shulker">Shulkerboxes</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="itemAmount">Amount *</label>
-                    <input type="number" id="itemAmount" name="itemAmount" min="1" required placeholder="1">
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="submit-btn">Submit Order</button>
-                    <button type="button" class="cancel-btn" id="cancelBtn">Cancel</button>
-                </div>
-            </form>
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay" onclick="if(event.target === this) toggleCart()">
+        <div class="cart-content">
+            <button class="cart-close" onclick="toggleCart()">×</button>
+            <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Your Cart</h2>
+            <div id="cartItems"></div>
+            <div class="cart-total" id="cartTotal">Total: 0</div>
+            <button class="checkout-btn" onclick="proceedCheckout()">Proceed to Checkout</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Checkout Form -->
+    <div class="checkout-form" id="checkoutForm">
+        <div class="checkout-content">
+            <button class="cart-close" onclick="closeCheckout()">×</button>
+            <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Complete Your Order</h2>
+            
+            <div class="form-group">
+                <label>In-Game Username *</label>
+                <input type="text" id="mcUsername" placeholder="Your Minecraft name..." required>
+            </div>
+
+            <div class="form-group">
+                <label>Discord Username *</label>
+                <input type="text" id="discordUser" placeholder="username#0000" required>
+            </div>
+
+            <div class="form-group">
+                <label>Delivery Coordinates (X Y Z) *</label>
+                <input type="text" id="coords" placeholder="100 64 -200" required>
+            </div>
+
+            <div class="form-group">
+                <label>Delivery Dimension *</label>
+                <select id="dimension" required>
+                    <option value="Overworld">Overworld</option>
+                    <option value="Nether Roof">Nether Roof</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Other Information</label>
+                <textarea id="otherInfo" rows="3" placeholder="Any special requests..."></textarea>
+            </div>
+
+            <div class="terms-box">
+                <strong>Terms of Service</strong><br><br>
+                If you make a purchase with us please ask me Fjcoolcat if anything is missing do not make it into a problem that you have been scammed cause it is probably I have forgotten. 
+                By placing an order, you agree that delivery times may vary based on stock availability and server conditions. 
+                All sales are final once items have been delivered to the specified coordinates. 
+                Please ensure your coordinates are accurate as we are not responsible for deliveries to incorrect locations.
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="agreeTerms" required>
+                <label for="agreeTerms" style="color: var(--text-secondary); font-size: 0.875rem;">I agree to the Terms of Service</label>
+            </div>
+
+            <button class="checkout-btn" onclick="placeOrder()">Place Order</button>
+        </div>
+    </div>
+
+    <!-- Confirmation Screen -->
+    <div class="confirmation" id="confirmation">
+        <h2>Order Placed!</h2>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Your order has been received successfully</p>
+    </div>
+
+    <!-- Owner Login -->
+    <div class="login-overlay" id="loginOverlay" onclick="if(event.target === this) closeLogin()">
+        <div class="login-box">
+            <h2>Owner Access</h2>
+            <input type="text" class="login-input" id="loginUser" placeholder="Username">
+            <input type="password" class="login-input" id="loginPass" placeholder="Password">
+            <button class="login-btn" onclick="doLogin()">Login</button>
+            <div class="login-error" id="loginError">Invalid credentials</div>
+            <button onclick="closeLogin()" style="margin-top: 1rem; background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.5rem 1rem; cursor: pointer; border-radius: 6px; font-family: inherit;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Owner Panel -->
+    <div class="owner-panel" id="ownerPanel">
+        <div class="panel-header">
+            <h2>Owner's Command Center</h2>
+            <button onclick="logout()" style="background: linear-gradient(135deg, var(--danger), #da3633); border: none; color: white; padding: 0.625rem 1.25rem; font-family: inherit; cursor: pointer; border-radius: 6px; font-size: 0.875rem; font-weight: 500; box-shadow: 0 0 10px var(--danger-glow);">Logout</button>
+        </div>
+        
+        <div class="panel-nav">
+            <button class="panel-tab active" onclick="switchPanel('orders')">Orders</button>
+            <button class="panel-tab" onclick="switchPanel('items')">Manage Items</button>
+            <button class="panel-tab" onclick="switchPanel('announce')">Announcements</button>
+        </div>
+
+        <div class="panel-content">
+            <!-- Orders Section -->
+            <div class="panel-section active" id="panel-orders">
+                <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Incoming Orders <span id="newOrderIndicator" style="display: none; color: var(--success); font-size: 0.875rem; margin-left: 0.5rem;">● New!</span></h2>
+                <div id="ordersList"></div>
+            </div>
+
+            <!-- Items Management -->
+            <div class="panel-section" id="panel-items">
+                <div class="admin-form">
+                    <h3 id="formTitle">Add New Item</h3>
+                    <input type="hidden" id="editItemId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Item Name *</label>
+                            <input type="text" id="itemName" placeholder="Diamond Sword...">
+                        </div>
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select id="itemCategory">
+                                <option>Building Blocks</option>
+                                <option>Wood & Natural</option>
+                                <option>Nether</option>
+                                <option>Special Blocks</option>
+                                <option>Mob Drops</option>
+                                <option>Redstone & Utility</option>
+                                <option>Food & Farming</option>
+                                <option>Premium Items</option>
+                                <option>Gear & Enchants</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Currency Type *</label>
+                        <div class="currency-select">
+                            <div class="currency-option selected" onclick="selectCurrency('diamonds')" id="curr-diamonds">
+                                <span class="currency-label">💎 Diamonds</span>
+                                <span class="currency-desc">Standard currency</span>
+                            </div>
+                            <div class="currency-option" onclick="selectCurrency('netherite')" id="curr-netherite">
+                                <span class="currency-label">⚫ Netherite Ingots</span>
+                                <span class="currency-desc">Premium currency</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="itemCurrency" value="diamonds">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Price *</label>
+                            <input type="number" id="itemPrice" placeholder="10" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity Per Purchase *</label>
+                            <input type="number" id="itemQty" placeholder="64 (1 stack)" min="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="itemDesc" rows="2" placeholder="Item description..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Status *</label>
+                        <select id="itemStock">
+                            <option value="true">In Stock</option>
+                            <option value="false">Out of Stock</option>
+                        </select>
+                    </div>
+                    <button class="checkout-btn" onclick="saveItem()" id="saveBtn">Add Item</button>
+                    <button class="checkout-btn" onclick="cancelEdit()" id="cancelBtn" style="display:none; background: var(--bg-secondary); color: var(--text-primary); margin-top: 0.5rem;">Cancel Edit</button>
+                </div>
+
+                <h3 style="margin: 2rem 0 1rem; font-size: 1.125rem;">Current Inventory</h3>
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminItemsList"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Announcements -->
+            <div class="panel-section" id="panel-announce">
+                <div class="admin-form">
+                    <h3>Update Announcement</h3>
+                    <div class="form-group">
+                        <label>Announcement Text</label>
+                        <textarea id="announceText" rows="3" placeholder="Enter announcement..."></textarea>
+                    </div>
+                    <button class="checkout-btn" onclick="updateAnnouncement()">Update Announcement</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data with default items if empty
+        function initData() {
+            const storedItems = localStorage.getItem('shopItems');
+            if (!storedItems) {
+                const defaultItems = [
+                    { id: 1, name: 'Elytra', category: 'Gear & Enchants', price: 40, quantity: 1, description: 'Rare elytra for gliding', inStock: true, currency: 'diamonds' },
+                    { id: 2, name: 'Netherite Ingot', category: 'Nether', price: 2, quantity: 1, description: 'Netherite ingot for upgrading gear', inStock: true, currency: 'netherite' },
+                    { id: 3, name: 'Heavy Core', category: 'Nether', price: 5, quantity: 1, description: 'Heavy core item', inStock: false, currency: 'diamonds' },
+                    { id: 4, name: 'Dragon Head', category: 'Mob Drops', price: 35, quantity: 1, description: 'Rare dragon head trophy', inStock: true, currency: 'diamonds' },
+                    { id: 5, name: 'Oak Wood Planks', category: 'Wood & Natural', price: 2, quantity: 64, description: '1 stack of oak wood planks', inStock: true, currency: 'diamonds' },
+                    { id: 6, name: 'Redstone Dust', category: 'Redstone & Utility', price: 1, quantity: 64, description: '1 stack of redstone dust', inStock: true, currency: 'diamonds' },
+                    { id: 7, name: 'Enchanted Golden Apple', category: 'Premium Items', price: 3, quantity: 1, description: 'God apple for emergencies', inStock: false, currency: 'netherite' },
+                    { id: 8, name: 'Diamond Pickaxe (Efficiency V)', category: 'Gear & Enchants', price: 25, quantity: 1, description: 'Pre-enchanted pickaxe', inStock: true, currency: 'diamonds' }
+                ];
+                localStorage.setItem('shopItems', JSON.stringify(defaultItems));
+            }
+            
+            const storedOrders = localStorage.getItem('shopOrders');
+            if (!storedOrders) {
+                localStorage.setItem('shopOrders', JSON.stringify([]));
+            }
+        }
+
+        // Data Storage
+        let items = [];
+        let orders = [];
+        let cart = [];
+        let currentCategory = 'all';
+        let editingItem = null;
+        let lastOrderCount = 0;
+        let orderCheckInterval = null;
+
+        // Load data from localStorage
+        function loadData() {
+            items = JSON.parse(localStorage.getItem('shopItems')) || [];
+            orders = JSON.parse(localStorage.getItem('shopOrders')) || [];
+            cart = JSON.parse(localStorage.getItem('shopCart')) || [];
+            lastOrderCount = orders.length;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initData();
+            loadData();
+            renderItems();
+            updateCartCount();
+            startOrderPolling();
+        });
+
+        // Currency functions
+        function selectCurrency(type) {
+            document.querySelectorAll('.currency-option').forEach(el => el.classList.remove('selected'));
+            document.getElementById(`curr-${type}`).classList.add('selected');
+            document.getElementById('itemCurrency').value = type;
+        }
+
+        function getCurrencySymbol(currency) {
+            return currency === 'netherite' ? '⚫' : '💎';
+        }
+
+        function getCurrencyLabel(currency) {
+            return currency === 'netherite' ? 'ni' : 'd';
+        }
+
+        // Render Items
+        function renderItems() {
+            const list = document.getElementById('itemsList');
+            list.innerHTML = '';
+            
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = currentCategory === 'all' 
+                ? items 
+                : items.filter(i => i.category === currentCategory);
+            
+            if (searchTerm) {
+                filtered = filtered.filter(i => i.name.toLowerCase().includes(searchTerm));
+            }
+
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty-state">No items found</div>';
+                return;
+            }
+
+            filtered.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'item-row';
+                div.style.animationDelay = `${index * 0.03}s`;
+                div.innerHTML = `
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-tags">
+                            <span class="tag tag-item">item</span>
+                            <span class="tag tag-floor">Floor 1</span>
+                            <span class="tag tag-category">${item.category}</span>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <div class="item-price">
+                            <span class="currency-icon">${getCurrencySymbol(item.currency || 'diamonds')}</span>
+                            ${item.price} <span style="font-size: 0.875rem; color: var(--text-secondary);">${getCurrencyLabel(item.currency || 'diamonds')}</span>
+                        </div>
+                        <span class="stock-badge ${item.inStock ? 'in-stock' : 'out-stock'}">
+                            ${item.inStock ? 'In Stock' : 'Out of Stock'}
+                        </span>
+                        <div class="qty-selector" style="${!item.inStock ? 'display:none' : ''}">
+                            <button class="qty-btn" onclick="adjustQty(${item.id}, -1)">-</button>
+                            <span class="qty-display" id="qty-${item.id}">1</span>
+                            <button class="qty-btn" onclick="adjustQty(${item.id}, 1)">+</button>
+                        </div>
+                        <button class="add-cart-btn" onclick="addToCart(${item.id})" ${!item.inStock ? 'disabled' : ''}>
+                            ${item.inStock ? 'Add to Cart' : 'Out of Stock'}
+                        </button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function searchItems() {
+            renderItems();
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.toggle('active', 
+                    (cat === 'all' && btn.textContent === 'All Items') || 
+                    btn.textContent === cat
+                );
+            });
+            renderItems();
+        }
+
+        function adjustQty(itemId, delta) {
+            const display = document.getElementById(`qty-${itemId}`);
+            let val = parseInt(display.textContent) + delta;
+            if (val < 1) val = 1;
+            if (val > 64) val = 64;
+            display.textContent = val;
+        }
+
+        // Cart Functions
+        function addToCart(itemId) {
+            const item = items.find(i => i.id === itemId);
+            const qty = parseInt(document.getElementById(`qty-${itemId}`).textContent);
+            
+            const existing = cart.find(c => c.id === itemId);
+            if (existing) {
+                existing.cartQty += qty;
+            } else {
+                cart.push({ ...item, cartQty: qty });
+            }
+            
+            saveCart();
+            updateCartCount();
+            
+            const btn = event.target;
+            const original = btn.textContent;
+            btn.textContent = 'Added!';
+            btn.style.background = 'var(--success)';
+            setTimeout(() => {
+                btn.textContent = original;
+                btn.style.background = '';
+            }, 1000);
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.cartQty, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        function saveCart() {
+            localStorage.setItem('shopCart', JSON.stringify(cart));
+        }
+
+        function toggleCart() {
+            const overlay = document.getElementById('cartOverlay');
+            overlay.classList.toggle('active');
+            if (overlay.classList.contains('active')) renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="empty-state">Your cart is empty</div>';
+                document.getElementById('cartTotal').textContent = 'Total: 0';
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div>
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">${item.name}</div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                            <span class="currency-icon">${getCurrencySymbol(item.currency || 'diamonds')}</span>
+                            ${item.price} ${getCurrencyLabel(item.currency || 'diamonds')} × ${item.cartQty} = 
+                            <span class="currency-icon">${getCurrencySymbol(item.currency || 'diamonds')}</span>
+                            ${item.price * item.cartQty} ${getCurrencyLabel(item.currency || 'diamonds')}
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="qty-selector">
+                            <button class="qty-btn" onclick="updateCartQty(${item.id}, -1)">-</button>
+                            <span class="qty-display">${item.cartQty}</span>
+                            <button class="qty-btn" onclick="updateCartQty(${item.id}, 1)">+</button>
+                        </div>
+                        <button class="remove-cart-item" onclick="removeFromCart(${item.id})">×</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const diamondTotal = cart.filter(i => (i.currency || 'diamonds') === 'diamonds').reduce((sum, item) => sum + (item.price * item.cartQty), 0);
+            const netheriteTotal = cart.filter(i => i.currency === 'netherite').reduce((sum, item) => sum + (item.price * item.cartQty), 0);
+            
+            let totalText = '';
+            if (diamondTotal > 0) totalText += `💎 ${diamondTotal} d `;
+            if (netheriteTotal > 0) totalText += `⚫ ${netheriteTotal} ni`;
+            
+            document.getElementById('cartTotal').textContent = `Total: ${totalText || '0'}`;
+        }
+
+        function updateCartQty(itemId, delta) {
+            const item = cart.find(c => c.id === itemId);
+            if (item) {
+                item.cartQty += delta;
+                if (item.cartQty < 1) item.cartQty = 1;
+                if (item.cartQty > 64) item.cartQty = 64;
+                saveCart();
+                renderCart();
+                updateCartCount();
+            }
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(c => c.id !== itemId);
+            saveCart();
+            renderCart();
+            updateCartCount();
+        }
+
+        // Checkout
+        function proceedCheckout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            document.getElementById('cartOverlay').classList.remove('active');
+            document.getElementById('checkoutForm').classList.add('active');
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutForm').classList.remove('active');
+        }
+
+        function placeOrder() {
+            const mcUser = document.getElementById('mcUsername').value.trim();
+            const discord = document.getElementById('discordUser').value.trim();
+            const coords = document.getElementById('coords').value.trim();
+            const dimension = document.getElementById('dimension').value;
+            const other = document.getElementById('otherInfo').value.trim();
+            const agreed = document.getElementById('agreeTerms').checked;
+
+            if (!mcUser || !discord || !coords) {
+                alert('Please fill in all required fields!');
+                return;
+            }
+
+            if (!agreed) {
+                alert('You must agree to the Terms of Service!');
+                return;
+            }
+
+            // Create order object
+            const order = {
+                id: Date.now(),
+                date: new Date().toLocaleString(),
+                items: JSON.parse(JSON.stringify(cart)), // Deep copy
+                customer: { 
+                    mcUser: mcUser, 
+                    discord: discord, 
+                    coords: coords, 
+                    dimension: dimension, 
+                    other: other 
+                },
+                status: 'pending'
+            };
+
+            // Save to localStorage
+            const currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
+            currentOrders.unshift(order);
+            localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
+            
+            // Update local orders array
+            orders = currentOrders;
+            lastOrderCount = orders.length;
+            
+            // Broadcast update
+            localStorage.setItem('lastOrderUpdate', Date.now().toString());
+            
+            // Clear cart
+            cart = [];
+            saveCart();
+            updateCartCount();
+            
+            // Close checkout
+            document.getElementById('checkoutForm').classList.remove('active');
+            
+            // Show confirmation
+            const confirm = document.getElementById('confirmation');
+            confirm.classList.add('active');
+            setTimeout(() => {
+                confirm.classList.remove('active');
+            }, 2000);
+
+            // Reset form
+            document.getElementById('mcUsername').value = '';
+            document.getElementById('discordUser').value = '';
+            document.getElementById('coords').value = '';
+            document.getElementById('otherInfo').value = '';
+            document.getElementById('agreeTerms').checked = false;
+        }
+
+        // Real-time order updates
+        function startOrderPolling() {
+            // Check immediately
+            checkForNewOrders();
+            
+            // Then check every 2 seconds
+            orderCheckInterval = setInterval(checkForNewOrders, 2000);
+
+            // Listen for storage events from other tabs
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'shopOrders' || e.key === 'lastOrderUpdate') {
+                    checkForNewOrders();
+                }
+            });
+        }
+
+        function checkForNewOrders() {
+            const storedOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
+            
+            if (storedOrders.length > lastOrderCount) {
+                // New order detected!
+                orders = storedOrders;
+                
+                // Show notification if owner panel is open
+                if (document.getElementById('ownerPanel').classList.contains('active')) {
+                    showNewOrderNotification();
+                    renderOrders();
+                }
+                
+                // Update indicator
+                const indicator = document.getElementById('newOrderIndicator');
+                if (indicator) {
+                    indicator.style.display = 'inline';
+                    setTimeout(() => {
+                        indicator.style.display = 'none';
+                    }, 5000);
+                }
+                
+                lastOrderCount = storedOrders.length;
+            } else {
+                orders = storedOrders;
+                lastOrderCount = storedOrders.length;
+            }
+        }
+
+        function showNewOrderNotification() {
+            const toast = document.getElementById('newOrderToast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // Owner Panel
+        function showLogin() {
+            document.getElementById('loginOverlay').classList.add('active');
+        }
+
+        function closeLogin() {
+            document.getElementById('loginOverlay').classList.remove('active');
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        function doLogin() {
+            const user = document.getElementById('loginUser').value;
+            const pass = document.getElementById('loginPass').value;
+
+            if (user === 'Owner21' && pass === '121') {
+                closeLogin();
+                document.getElementById('ownerPanel').classList.add('active');
+                loadData(); // Refresh data
+                lastOrderCount = orders.length;
+                renderOrders();
+                renderAdminItems();
+                document.getElementById('loginUser').value = '';
+                document.getElementById('loginPass').value = '';
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function logout() {
+            document.getElementById('ownerPanel').classList.remove('active');
+        }
+
+        function switchPanel(tab) {
+            document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(`panel-${tab}`).classList.add('active');
+            
+            if (tab === 'orders') {
+                loadData();
+                lastOrderCount = orders.length;
+                renderOrders();
+            }
+            if (tab === 'items') renderAdminItems();
+        }
+
+        // Orders Management
+        function renderOrders() {
+            const container = document.getElementById('ordersList');
+            loadData(); // Always refresh from localStorage
+            
+            if (orders.length === 0) {
+                container.innerHTML = '<div class="empty-state">No orders yet</div>';
+                return;
+            }
+
+            container.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">Order #${order.id}</span>
+                        <span class="order-status ${order.status === 'pending' ? 'status-pending' : 'status-completed'}">
+                            ${order.status.toUpperCase()}
+                        </span>
+                    </div>
+                    <div class="order-details">
+                        <div class="order-detail-item">
+                            <strong>Date</strong>
+                            ${order.date}
+                        </div>
+                        <div class="order-detail-item">
+                            <strong>MC User</strong>
+                            ${order.customer.mcUser}
+                        </div>
+                        <div class="order-detail-item">
+                            <strong>Discord</strong>
+                            ${order.customer.discord}
+                        </div>
+                        <div class="order-detail-item">
+                            <strong>Coords</strong>
+                            ${order.customer.coords}
+                        </div>
+                        <div class="order-detail-item">
+                            <strong>Dimension</strong>
+                            ${order.customer.dimension}
+                        </div>
+                        <div class="order-detail-item">
+                            <strong>Total Items</strong>
+                            ${order.items.reduce((sum, i) => sum + i.cartQty, 0)}
+                        </div>
+                    </div>
+                    ${order.customer.other ? `<div style="background: var(--bg-secondary); padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem; font-size: 0.875rem; color: var(--text-secondary);"><strong style="color: var(--text-primary);">Note:</strong> ${order.customer.other}</div>` : ''}
+                    <div class="order-items-list">
+                        <strong>Items Ordered</strong>
+                        ${order.items.map(i => `
+                            <div class="order-item-row">
+                                <span>${i.name} (x${i.cartQty})</span>
+                                <span>
+                                    <span class="currency-icon">${getCurrencySymbol(i.currency || 'diamonds')}</span>
+                                    ${i.price * i.cartQty} ${getCurrencyLabel(i.currency || 'diamonds')}
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="order-actions">
+                        ${order.status === 'pending' ? `<button class="btn-complete" onclick="completeOrder(${order.id})">Complete Order</button>` : ''}
+                        <button class="btn-delete" onclick="deleteOrder(${order.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function completeOrder(id) {
+            const currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
+            const order = currentOrders.find(o => o.id === id);
+            if (order) {
+                order.status = 'completed';
+                localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
+                loadData();
+                renderOrders();
+            }
+        }
+
+        function deleteOrder(id) {
+            if (confirm('Delete this order permanently?')) {
+                let currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
+                currentOrders = currentOrders.filter(o => o.id !== id);
+                localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
+                loadData();
+                lastOrderCount = orders.length;
+                renderOrders();
+            }
+        }
+
+        // Item Management
+        function renderAdminItems() {
+            loadData();
+            const tbody = document.getElementById('adminItemsList');
+            tbody.innerHTML = items.map(item => `
+                <tr>
+                    <td style="font-weight: 500;">${item.name}</td>
+                    <td><span class="tag tag-category">${item.category}</span></td>
+                    <td>
+                        <span class="currency-icon">${getCurrencySymbol(item.currency || 'diamonds')}</span>
+                        ${item.price} ${getCurrencyLabel(item.currency || 'diamonds')}
+                    </td>
+                    <td>${item.quantity}</td>
+                    <td><span class="stock-badge ${item.inStock ? 'in-stock' : 'out-stock'}">${item.inStock ? 'Yes' : 'No'}</span></td>
+                    <td>
+                        <button class="btn-edit" onclick="editItem(${item.id})">Edit</button>
+                        <button class="btn-remove" onclick="deleteItem(${item.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function saveItem() {
+            const name = document.getElementById('itemName').value.trim();
+            const category = document.getElementById('itemCategory').value;
+            const currency = document.getElementById('itemCurrency').value;
+            const price = parseInt(document.getElementById('itemPrice').value);
+            const quantity = parseInt(document.getElementById('itemQty').value);
+            const description = document.getElementById('itemDesc').value.trim();
+            const inStock = document.getElementById('itemStock').value === 'true';
+
+            if (!name || !price || !quantity) {
+                alert('Please fill in all required fields!');
+                return;
+            }
+
+            let currentItems = JSON.parse(localStorage.getItem('shopItems')) || [];
+
+            if (editingItem) {
+                const itemIndex = currentItems.findIndex(i => i.id === editingItem);
+                if (itemIndex !== -1) {
+                    currentItems[itemIndex] = {
+                        ...currentItems[itemIndex],
+                        name: name,
+                        category: category,
+                        currency: currency,
+                        price: price,
+                        quantity: quantity,
+                        description: description,
+                        inStock: inStock
+                    };
+                }
+                editingItem = null;
+                document.getElementById('formTitle').textContent = 'Add New Item';
+                document.getElementById('saveBtn').textContent = 'Add Item';
+                document.getElementById('cancelBtn').style.display = 'none';
+            } else {
+                const newItem = {
+                    id: Date.now(),
+                    name: name,
+                    category: category,
+                    currency: currency,
+                    price: price,
+                    quantity: quantity,
+                    description: description,
+                    inStock: inStock
+                };
+                currentItems.push(newItem);
+            }
+
+            localStorage.setItem('shopItems', JSON.stringify(currentItems));
+            loadData();
+            clearForm();
+            renderAdminItems();
+            renderItems();
+        }
+
+        function editItem(id) {
+            loadData();
+            const item = items.find(i => i.id === id);
+            if (!item) return;
+
+            editingItem = id;
+            document.getElementById('itemName').value = item.name;
+            document.getElementById('itemCategory').value = item.category;
+            document.getElementById('itemPrice').value = item.price;
+            document.getElementById('itemQty').value = item.quantity;
+            document.getElementById('itemDesc').value = item.description;
+            document.getElementById('itemStock').value = item.inStock.toString();
+            
+            const currency = item.currency || 'diamonds';
+            selectCurrency(currency);
+            document.getElementById('itemCurrency').value = currency;
+            
+            document.getElementById('formTitle').textContent = 'Edit Item';
+            document.getElementById('saveBtn').textContent = 'Update Item';
+            document.getElementById('cancelBtn').style.display = 'block';
+        }
+
+        function cancelEdit() {
+            editingItem = null;
+            clearForm();
+            document.getElementById('formTitle').textContent = 'Add New Item';
+            document.getElementById('saveBtn').textContent = 'Add Item';
+            document.getElementById('cancelBtn').style.display = 'none';
+        }
+
+        function deleteItem(id) {
+            if (confirm('Delete this item?')) {
+                let currentItems = JSON.parse(localStorage.getItem('shopItems')) || [];
+                currentItems = currentItems.filter(i => i.id !== id);
+                localStorage.setItem('shopItems', JSON.stringify(currentItems));
+                loadData();
+                renderAdminItems();
+                renderItems();
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemPrice').value = '';
+            document.getElementById('itemQty').value = '';
+            document.getElementById('itemDesc').value = '';
+            document.getElementById('itemStock').value = 'true';
+            selectCurrency('diamonds');
+            document.getElementById('itemCurrency').value = 'diamonds';
+        }
+
+        // Announcements
+        function updateAnnouncement() {
+            const text = document.getElementById('announceText').value.trim();
+            if (!text) return;
+            
+            localStorage.setItem('shopAnnouncement', text);
+            document.getElementById('announceText').value = '';
+            alert('Announcement updated!');
+        }
+
+        // Close overlays on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('cartOverlay').classList.remove('active');
+                document.getElementById('checkoutForm').classList.remove('active');
+                document.getElementById('loginOverlay').classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
