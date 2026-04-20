@@ -218,6 +218,8 @@
             overflow: hidden;
         }
 
+        .cart-btn { transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease; }
+        .cart-btn:active { transform: translateY(0); filter: brightness(0.95); }
         .cart-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 0 25px var(--accent-blue-glow);
@@ -236,22 +238,26 @@
         }
 
         .owner-login-btn {
-            background: transparent;
+            background: linear-gradient(135deg, rgba(74,158,255,0.12), rgba(139,92,246,0.12));
             border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 0.6rem 1.2rem;
+            color: var(--text-primary);
+            padding: 0.55rem 1.1rem;
             font-family: inherit;
             font-size: 0.875rem;
+            font-weight: 500;
             cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.3s;
+            border-radius: 8px;
+            letter-spacing: 0.01em;
+            transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+            backdrop-filter: blur(4px);
         }
-
         .owner-login-btn:hover {
-            border-color: var(--purple);
-            color: var(--purple);
-            box-shadow: 0 0 15px var(--purple-glow);
+            transform: translateY(-1px);
+            border-color: var(--accent-blue);
+            background: linear-gradient(135deg, rgba(74,158,255,0.22), rgba(139,92,246,0.22));
+            box-shadow: 0 4px 14px rgba(74,158,255,0.25), 0 0 12px var(--accent-blue-glow);
         }
+        .owner-login-btn:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(74,158,255,0.2); }
 
         .container {
             max-width: 1000px;
@@ -554,23 +560,26 @@
 
         .checkout-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--accent-blue), #357abd);
+            background: linear-gradient(135deg, var(--accent-blue), var(--purple));
             border: none;
             color: white;
-            padding: 0.875rem;
+            padding: 0.875rem 1rem;
             font-family: inherit;
             font-size: 1rem;
             font-weight: 600;
+            letter-spacing: 0.02em;
             cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.3s;
-            box-shadow: 0 0 15px var(--accent-blue-glow);
+            border-radius: 8px;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+            box-shadow: 0 4px 18px rgba(74,158,255,0.35);
         }
-
         .checkout-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 0 25px var(--accent-blue-glow);
+            filter: brightness(1.08);
+            box-shadow: 0 8px 26px rgba(74,158,255,0.5);
         }
+        .checkout-btn:active { transform: translateY(0); filter: brightness(0.95); }
+        .checkout-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; filter: none; }
 
         .checkout-form {
             display: none;
@@ -819,22 +828,28 @@
         }
 
         .panel-tab {
-            background: transparent;
+            background: rgba(255,255,255,0.02);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            padding: 0.5rem 1rem;
+            padding: 0.55rem 1.1rem;
             font-family: inherit;
             font-size: 0.875rem;
+            font-weight: 500;
             cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.3s;
+            border-radius: 8px;
+            transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
         }
-
-        .panel-tab.active, .panel-tab:hover {
-            background: linear-gradient(135deg, var(--accent-blue), #357abd);
+        .panel-tab:hover {
+            color: var(--text-primary);
             border-color: var(--accent-blue);
+            background: rgba(74,158,255,0.08);
+            transform: translateY(-1px);
+        }
+        .panel-tab.active {
+            background: linear-gradient(135deg, var(--accent-blue), var(--purple));
+            border-color: transparent;
             color: white;
-            box-shadow: 0 0 15px var(--accent-blue-glow);
+            box-shadow: 0 4px 16px rgba(74,158,255,0.4);
         }
 
         .panel-content {
@@ -1157,29 +1172,40 @@
             font-size: 0.875rem;
         }
         .btn-refresh {
-            background: linear-gradient(135deg, var(--accent-blue), #357abd);
+            background: linear-gradient(135deg, var(--accent-blue), var(--purple));
             border: none;
             color: white;
             padding: 0.5rem 1rem;
             font-family: inherit;
             font-weight: 500;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 0.85rem;
-            box-shadow: 0 0 10px var(--accent-blue-glow);
+            box-shadow: 0 2px 10px rgba(74,158,255,0.3);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
         }
-        .btn-refresh:hover { transform: translateY(-1px); }
+        .btn-refresh:hover { transform: translateY(-1px); filter: brightness(1.08); box-shadow: 0 4px 16px rgba(74,158,255,0.45); }
+        .btn-refresh:active { transform: translateY(0); }
+
         .btn-secondary {
-            background: transparent;
+            background: rgba(255,255,255,0.03);
             border: 1px solid var(--border-color);
-            color: var(--text-secondary);
+            color: var(--text-primary);
             padding: 0.5rem 1rem;
             font-family: inherit;
+            font-weight: 500;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 0.85rem;
+            transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
         }
-        .btn-secondary:hover { border-color: var(--accent-blue); color: var(--text-primary); }
+        .btn-secondary:hover {
+            border-color: var(--accent-blue);
+            background: rgba(74,158,255,0.08);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 10px rgba(74,158,255,0.2);
+        }
+        .btn-secondary:active { transform: translateY(0); }
 
         @media (max-width: 768px) {
             .header h1 { font-size: 2rem; }
@@ -1975,6 +2001,20 @@
                         <button class="btn-secondary" onclick="clearAnnouncement()">Clear Announcement</button>
                     </div>
                 </div>
+
+                <div class="admin-form" style="margin-top: 1.5rem;">
+                    <h3>Backup & Restore</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.75rem;">
+                        Orders, items, accounts, tickets, and announcements live in this browser's local storage and are tied to this file's path.
+                        If you download a new copy of <code style="color:var(--accent-cyan);">shop.html</code>, the new file starts empty.
+                        Export here to save everything to a JSON file, then Import it in the new copy.
+                    </p>
+                    <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+                        <button class="checkout-btn" onclick="exportData()">Export Data</button>
+                        <button class="btn-secondary" onclick="document.getElementById('importFileInput').click()">Import Data</button>
+                        <input type="file" id="importFileInput" accept="application/json" style="display:none;" onchange="importData(this)">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -2676,6 +2716,60 @@
             showToast('Announcement cleared');
         }
 
+        // ===== Export / Import =====
+        const EXPORT_KEYS = ['shopItems','shopOrders','shopAnnouncement','shopUsers','shopCurrentUser','shopTickets'];
+        function exportData() {
+            const data = {};
+            EXPORT_KEYS.forEach(k => {
+                const v = localStorage.getItem(k);
+                if (v != null) data[k] = v;
+            });
+            const payload = {
+                exportedAt: new Date().toISOString(),
+                source: 'everything-you-need-shop',
+                version: 1,
+                data: data
+            };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'shop-backup-' + new Date().toISOString().replace(/[:.]/g, '-') + '.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Data exported');
+        }
+        function importData(input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    const data = parsed && parsed.data ? parsed.data : parsed;
+                    if (!data || typeof data !== 'object') throw new Error('Invalid file');
+                    EXPORT_KEYS.forEach(k => {
+                        if (data[k] != null) localStorage.setItem(k, data[k]);
+                    });
+                    loadData();
+                    renderItems();
+                    renderOrders();
+                    renderAdminItems();
+                    renderAnnouncement();
+                    renderOwnerTickets();
+                    updateOwnerTicketBadge();
+                    updateAccountUI();
+                    showToast('Data imported — ' + (JSON.parse(data.shopOrders || '[]').length) + ' orders restored');
+                } catch (err) {
+                    showToast('Import failed: ' + err.message, 4000);
+                }
+                input.value = '';
+            };
+            reader.readAsText(file);
+        }
+
         // ===== Nether Calculator =====
         function openNetherCalc() {
             document.getElementById('netherCalcOverlay').classList.add('active');
@@ -2796,6 +2890,19 @@
         }
 
         // ===== Tickets =====
+        const ticketDrafts = {}; // { ticketId: draftText } — preserves in-progress replies across re-renders
+        function harvestTicketDrafts() {
+            document.querySelectorAll('textarea[id^="reply-"]').forEach(ta => {
+                const id = ta.id.replace('reply-', '');
+                if (ta.value != null) ticketDrafts[id] = ta.value;
+            });
+        }
+        function restoreTicketDrafts() {
+            document.querySelectorAll('textarea[id^="reply-"]').forEach(ta => {
+                const id = ta.id.replace('reply-', '');
+                if (ticketDrafts[id] != null) ta.value = ticketDrafts[id];
+            });
+        }
         function getTickets() { return JSON.parse(localStorage.getItem('shopTickets') || '[]'); }
         function saveTickets(list) {
             localStorage.setItem('shopTickets', JSON.stringify(list));
@@ -2821,12 +2928,14 @@
             if (!listEl) return;
             if (whoEl) whoEl.textContent = user ? `Signed in as ${user}` : '';
             if (!user) { listEl.innerHTML = ''; return; }
+            harvestTicketDrafts();
             const tickets = getTickets().filter(t => t.user === user).sort((a, b) => b.id - a.id);
             if (tickets.length === 0) {
                 listEl.innerHTML = '<div class="empty-state" style="padding:1rem;">No tickets yet. Open one below.</div>';
                 return;
             }
             listEl.innerHTML = tickets.map(t => renderTicketCard(t, false)).join('');
+            restoreTicketDrafts();
         }
         function renderTicketCard(t, asOwner) {
             const statusClass = t.status === 'closed' ? 'closed' : 'open';
@@ -2866,7 +2975,7 @@
         function renderMessage(m) {
             const who = m.isOwner ? 'owner' : 'user';
             const label = m.isOwner
-                ? `<span class="owner-tag">[OWNER]</span>${escapeHtml(m.from || 'Owner')}`
+                ? `<span class="owner-tag">[OWNER]</span>`
                 : escapeHtml(m.from || 'User');
             return `
                 <div class="msg ${who}">
@@ -2923,6 +3032,7 @@
             if (!t || t.user !== user) return;
             t.messages.push({ from: user, isOwner: false, text: text, time: new Date().toLocaleString() });
             if (t.status === 'closed') t.status = 'open';
+            delete ticketDrafts[id];
             saveTickets(tickets);
             renderUserTickets();
             if (document.getElementById('ownerPanel').classList.contains('active')) renderOwnerTickets();
@@ -2935,7 +3045,8 @@
             const tickets = getTickets();
             const t = tickets.find(x => x.id === id);
             if (!t) return;
-            t.messages.push({ from: 'Owner21', isOwner: true, text: text, time: new Date().toLocaleString() });
+            t.messages.push({ from: '', isOwner: true, text: text, time: new Date().toLocaleString() });
+            delete ticketDrafts[id];
             saveTickets(tickets);
             renderOwnerTickets();
             renderUserTickets();
@@ -2964,6 +3075,7 @@
             const listEl = document.getElementById('ownerTicketsList');
             const countEl = document.getElementById('ticketsCount');
             if (!listEl) return;
+            harvestTicketDrafts();
             const tickets = getTickets().sort((a, b) => b.id - a.id);
             if (countEl) {
                 const open = tickets.filter(t => t.status === 'open').length;
@@ -2974,6 +3086,7 @@
                 return;
             }
             listEl.innerHTML = tickets.map(t => renderTicketCard(t, true)).join('');
+            restoreTicketDrafts();
         }
         function updateOwnerTicketBadge() {
             const badge = document.getElementById('ownerTicketBadge');
@@ -2983,11 +3096,16 @@
             else { badge.style.display = 'none'; }
         }
 
-        // Cross-tab sync for tickets
+        // Cross-tab sync for tickets (skip re-render if user is typing a reply —
+        // drafts are preserved anyway, but avoiding the flash is nicer)
         window.addEventListener('storage', (e) => {
             if (e.key === 'shopTickets' || e.key === 'shopTicketsUpdate') {
-                if (document.getElementById('ticketsOverlay').classList.contains('active')) renderUserTickets();
-                if (document.getElementById('ownerPanel').classList.contains('active')) renderOwnerTickets();
+                const typing = document.activeElement && document.activeElement.tagName === 'TEXTAREA'
+                    && /^reply-/.test(document.activeElement.id);
+                if (!typing) {
+                    if (document.getElementById('ticketsOverlay').classList.contains('active')) renderUserTickets();
+                    if (document.getElementById('ownerPanel').classList.contains('active')) renderOwnerTickets();
+                }
                 updateOwnerTicketBadge();
             }
         });
