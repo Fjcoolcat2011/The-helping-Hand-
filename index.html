@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Everything You Need - Minecraft Shop</title>
+    <title>Everything You Need by Fjcoolcat - Minecraft Shop</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -2206,65 +2206,184 @@
         </div>
     </div>
 
-    <script>
-        // Initialize data with default items if empty
-        function initData() {
-            const storedItems = localStorage.getItem('shopItems');
-            if (!storedItems) {
-                const defaultItems = [
-                    { id: 1, name: 'Elytra', category: 'Gear & Enchants', price: 40, quantity: 1, description: 'Rare elytra for gliding', inStock: true, currency: 'diamonds' },
-                    { id: 2, name: 'Netherite Ingot', category: 'Nether', price: 2, quantity: 1, description: 'Netherite ingot for upgrading gear', inStock: true, currency: 'netherite' },
-                    { id: 3, name: 'Heavy Core', category: 'Nether', price: 5, quantity: 1, description: 'Heavy core item', inStock: false, currency: 'diamonds' },
-                    { id: 4, name: 'Dragon Head', category: 'Mob Drops', price: 35, quantity: 1, description: 'Rare dragon head trophy', inStock: true, currency: 'diamonds' },
-                    { id: 5, name: 'Oak Wood Planks', category: 'Wood & Natural', price: 2, quantity: 64, description: '1 stack of oak wood planks', inStock: true, currency: 'diamonds' },
-                    { id: 6, name: 'Redstone Dust', category: 'Redstone & Utility', price: 1, quantity: 64, description: '1 stack of redstone dust', inStock: true, currency: 'diamonds' },
-                    { id: 7, name: 'Enchanted Golden Apple', category: 'Premium Items', price: 3, quantity: 1, description: 'God apple for emergencies', inStock: false, currency: 'netherite' },
-                    { id: 8, name: 'Diamond Pickaxe (Efficiency V)', category: 'Gear & Enchants', price: 25, quantity: 1, description: 'Pre-enchanted pickaxe', inStock: true, currency: 'diamonds' }
-                ];
-                localStorage.setItem('shopItems', JSON.stringify(defaultItems));
-            }
-            
-            const storedOrders = localStorage.getItem('shopOrders');
-            if (!storedOrders) {
-                localStorage.setItem('shopOrders', JSON.stringify([]));
+    <!-- Firebase SDK + Firestore bridge (real-time cross-device sync) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import {
+            initializeFirestore, getFirestore, collection, doc, getDoc, getDocs,
+            setDoc, updateDoc, deleteDoc, onSnapshot,
+            writeBatch, serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLbNLVkOmtrLOreKZcwMjgGEWDZwebO_Q",
+            authDomain: "everything-you-need-b1347.firebaseapp.com",
+            projectId: "everything-you-need-b1347",
+            storageBucket: "everything-you-need-b1347.firebasestorage.app",
+            messagingSenderId: "367532798009",
+            appId: "1:367532798009:web:ab42bd2ce1c96f34b35de8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        // Force long-polling: some network stacks + file:// origins block
+        // Firestore's default WebChannel/gRPC transport, which makes writes
+        // hang silently. Long-polling works everywhere.
+        // Database ID is "default" (the GCP-style named database, not the
+        // legacy "(default)" unnamed one).
+        const FIRESTORE_DB_ID = "default";
+        let db;
+        try {
+            db = initializeFirestore(app, {
+                experimentalForceLongPolling: true,
+                useFetchStreams: false
+            }, FIRESTORE_DB_ID);
+        } catch (e) {
+            try {
+                db = getFirestore(app, FIRESTORE_DB_ID);
+            } catch (e2) {
+                db = getFirestore(app);
             }
         }
 
-        // Data Storage
+        window.FSB = {
+            db, collection, doc, getDoc, getDocs,
+            setDoc, updateDoc, deleteDoc, onSnapshot,
+            writeBatch, serverTimestamp
+        };
+        window.dispatchEvent(new Event('fsb-ready'));
+    </script>
+
+    <script>
+        // ===== Default items (seeded on first run only) =====
+        const DEFAULT_ITEMS = [
+            { id: 1, name: 'Elytra', category: 'Gear & Enchants', price: 40, quantity: 1, description: 'Rare elytra for gliding', inStock: true, currency: 'diamonds' },
+            { id: 2, name: 'Netherite Ingot', category: 'Nether', price: 2, quantity: 1, description: 'Netherite ingot for upgrading gear', inStock: true, currency: 'netherite' },
+            { id: 3, name: 'Heavy Core', category: 'Nether', price: 5, quantity: 1, description: 'Heavy core item', inStock: false, currency: 'diamonds' },
+            { id: 4, name: 'Dragon Head', category: 'Mob Drops', price: 35, quantity: 1, description: 'Rare dragon head trophy', inStock: true, currency: 'diamonds' },
+            { id: 5, name: 'Oak Wood Planks', category: 'Wood & Natural', price: 2, quantity: 64, description: '1 stack of oak wood planks', inStock: true, currency: 'diamonds' },
+            { id: 6, name: 'Redstone Dust', category: 'Redstone & Utility', price: 1, quantity: 64, description: '1 stack of redstone dust', inStock: true, currency: 'diamonds' },
+            { id: 7, name: 'Enchanted Golden Apple', category: 'Premium Items', price: 3, quantity: 1, description: 'God apple for emergencies', inStock: false, currency: 'netherite' },
+            { id: 8, name: 'Diamond Pickaxe (Efficiency V)', category: 'Gear & Enchants', price: 25, quantity: 1, description: 'Pre-enchanted pickaxe', inStock: true, currency: 'diamonds' }
+        ];
+
+        // ===== Data Storage (maintained live by Firestore listeners) =====
         let items = [];
         let orders = [];
         let cart = [];
+        let __tickets = [];
+        let __users = [];
+        let __announcement = '';
         let currentCategory = 'all';
         let editingItem = null;
         let lastOrderCount = 0;
-        let orderCheckInterval = null;
+        let __firstOrdersSnapshot = true;
 
-        // Load data from localStorage
-        function loadData() {
-            items = JSON.parse(localStorage.getItem('shopItems')) || [];
-            orders = JSON.parse(localStorage.getItem('shopOrders')) || [];
-            cart = JSON.parse(localStorage.getItem('shopCart')) || [];
-            lastOrderCount = orders.length;
+        // loadData() is now a no-op — live state is kept fresh by onSnapshot listeners.
+        // Kept as a shim so existing call sites still work.
+        function loadData() { /* no-op: Firestore listeners keep state live */ }
+
+        // ===== Firestore bridge setup =====
+        function fsbReady() { return !!window.FSB; }
+        function setupFirestoreListeners() {
+            const { db, collection, doc, onSnapshot } = window.FSB;
+
+            // ITEMS
+            onSnapshot(collection(db, 'items'), snap => {
+                items = snap.docs.map(d => d.data()).sort((a, b) => (a.id || 0) - (b.id || 0));
+                // Try to seed defaults on any empty snapshot; seedDefaultsIfNeeded()
+                // is idempotent (guarded by meta/seeded doc) so this is safe.
+                if (items.length === 0) { seedDefaultsIfNeeded(); }
+                try { renderItems(); } catch(e) {}
+                if (document.getElementById('ownerPanel') && document.getElementById('ownerPanel').classList.contains('active')) {
+                    try { renderAdminItems(); } catch(e) {}
+                }
+            });
+
+            // ORDERS
+            onSnapshot(collection(db, 'orders'), snap => {
+                const prevCount = orders.length;
+                orders = snap.docs.map(d => d.data()).sort((a, b) => (b.id || 0) - (a.id || 0));
+                if (!__firstOrdersSnapshot && orders.length > prevCount) {
+                    showNewOrderNotification();
+                    const indicator = document.getElementById('newOrderIndicator');
+                    if (indicator) {
+                        indicator.style.display = 'inline';
+                        setTimeout(() => { indicator.style.display = 'none'; }, 5000);
+                    }
+                }
+                lastOrderCount = orders.length;
+                __firstOrdersSnapshot = false;
+                if (document.getElementById('ownerPanel') && document.getElementById('ownerPanel').classList.contains('active')) {
+                    try { renderOrders(); } catch(e) {}
+                }
+            });
+
+            // ANNOUNCEMENT (single doc at config/announcement)
+            onSnapshot(doc(db, 'config', 'announcement'), snap => {
+                __announcement = snap.exists() ? (snap.data().text || '') : '';
+                try { renderAnnouncement(); } catch(e) {}
+                // Keep admin textarea in sync if owner panel open + announcements tab visible
+                const ta = document.getElementById('announceText');
+                if (ta && document.activeElement !== ta) ta.value = __announcement;
+            });
+
+            // ACCOUNTS
+            onSnapshot(collection(db, 'accounts'), snap => {
+                __users = snap.docs.map(d => d.data());
+            });
+
+            // TICKETS
+            onSnapshot(collection(db, 'tickets'), snap => {
+                __tickets = snap.docs.map(d => d.data()).sort((a, b) => (b.id || 0) - (a.id || 0));
+                updateOwnerTicketBadge();
+                const typing = document.activeElement && document.activeElement.tagName === 'TEXTAREA'
+                    && /^reply-/.test(document.activeElement.id);
+                if (!typing) {
+                    if (document.getElementById('ticketsOverlay') && document.getElementById('ticketsOverlay').classList.contains('active')) {
+                        try { renderUserTickets(); } catch(e) {}
+                    }
+                    if (document.getElementById('ownerPanel') && document.getElementById('ownerPanel').classList.contains('active')) {
+                        try { renderOwnerTickets(); } catch(e) {}
+                    }
+                }
+            });
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            initData();
-            loadData();
+        async function seedDefaultsIfNeeded() {
+            if (!fsbReady()) return;
+            const { db, doc, getDoc, setDoc, writeBatch } = window.FSB;
+            try {
+                const metaRef = doc(db, 'meta', 'seeded');
+                const metaSnap = await getDoc(metaRef);
+                if (metaSnap.exists()) return; // already seeded at some point
+                const batch = writeBatch(db);
+                DEFAULT_ITEMS.forEach(it => batch.set(doc(db, 'items', String(it.id)), it));
+                batch.set(metaRef, { seededAt: new Date().toISOString() });
+                await batch.commit();
+            } catch (err) {
+                console.warn('Seed defaults failed:', err);
+            }
+        }
+
+        // ===== Init =====
+        let __bootDone = false;
+        function boot() {
+            if (__bootDone) return;
+            if (!fsbReady()) return;
+            __bootDone = true;
+            // cart stays in localStorage (per-device)
+            cart = JSON.parse(localStorage.getItem('shopCart') || '[]');
+            setupFirestoreListeners();
             renderItems();
             updateCartCount();
             renderAnnouncement();
-            startOrderPolling();
             updateAccountUI();
             updateOwnerTicketBadge();
-        });
-
-        // Cross-tab sync for announcements (storage events only fire in OTHER tabs)
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'shopAnnouncement') {
-                renderAnnouncement();
-            }
-        });
+        }
+        document.addEventListener('DOMContentLoaded', boot);
+        window.addEventListener('fsb-ready', boot);
+        // Safety: if the module script already fired before listener attached
+        if (window.FSB && document.readyState !== 'loading') boot();
 
         // Currency functions
         function selectCurrency(type) {
@@ -2504,18 +2623,14 @@
                 status: 'pending'
             };
 
-            // Save to localStorage
-            const currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
-            currentOrders.unshift(order);
-            localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
-            
-            // Update local orders array
-            orders = currentOrders;
-            lastOrderCount = orders.length;
-            
-            // Broadcast update
-            localStorage.setItem('lastOrderUpdate', Date.now().toString());
-            
+            // Persist to Firestore (broadcasts live to every device via onSnapshot)
+            if (!fsbReady()) { showToast('Not connected — try again in a moment'); return; }
+            const { db, doc, setDoc } = window.FSB;
+            setDoc(doc(db, 'orders', String(order.id)), order).catch(err => {
+                console.error('placeOrder failed', err);
+                showToast('Could not place order — check connection');
+            });
+
             // Clear cart
             cart = [];
             saveCart();
@@ -2539,50 +2654,8 @@
             document.getElementById('agreeTerms').checked = false;
         }
 
-        // Real-time order updates
-        function startOrderPolling() {
-            // Check immediately
-            checkForNewOrders();
-            
-            // Then check every 2 seconds
-            orderCheckInterval = setInterval(checkForNewOrders, 2000);
-
-            // Listen for storage events from other tabs
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'shopOrders' || e.key === 'lastOrderUpdate') {
-                    checkForNewOrders();
-                }
-            });
-        }
-
-        function checkForNewOrders() {
-            const storedOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
-            
-            if (storedOrders.length > lastOrderCount) {
-                // New order detected!
-                orders = storedOrders;
-                
-                // Show notification if owner panel is open
-                if (document.getElementById('ownerPanel').classList.contains('active')) {
-                    showNewOrderNotification();
-                    renderOrders();
-                }
-                
-                // Update indicator
-                const indicator = document.getElementById('newOrderIndicator');
-                if (indicator) {
-                    indicator.style.display = 'inline';
-                    setTimeout(() => {
-                        indicator.style.display = 'none';
-                    }, 5000);
-                }
-                
-                lastOrderCount = storedOrders.length;
-            } else {
-                orders = storedOrders;
-                lastOrderCount = storedOrders.length;
-            }
-        }
+        // Order polling was replaced by Firestore onSnapshot listener in setupFirestoreListeners().
+        // New-order toast + indicator are triggered from the orders listener.
 
         let statusToastTimer = null;
         function showToast(message, ms = 2200) {
@@ -2649,7 +2722,7 @@
             }
             if (tab === 'items') renderAdminItems();
             if (tab === 'announce') {
-                document.getElementById('announceText').value = localStorage.getItem('shopAnnouncement') || '';
+                document.getElementById('announceText').value = __announcement || '';
             }
         }
 
@@ -2797,52 +2870,43 @@
             return false;
         }
         function removeBrokenOrders() {
-            const cur = JSON.parse(localStorage.getItem('shopOrders')) || [];
-            const cleaned = cur.filter(o => !isOrderMalformed(o));
-            const removed = cur.length - cleaned.length;
-            localStorage.setItem('shopOrders', JSON.stringify(cleaned));
-            localStorage.setItem('lastOrderUpdate', Date.now().toString());
-            loadData();
-            renderOrders();
-            showToast(removed + ' broken order' + (removed === 1 ? '' : 's') + ' removed');
+            if (!fsbReady()) return;
+            const { db, doc, deleteDoc, writeBatch } = window.FSB;
+            const broken = orders.filter(o => isOrderMalformed(o));
+            if (broken.length === 0) { showToast('No broken orders'); return; }
+            const batch = writeBatch(db);
+            broken.forEach(o => { if (o && o.id != null) batch.delete(doc(db, 'orders', String(o.id))); });
+            batch.commit()
+                .then(() => showToast(broken.length + ' broken order' + (broken.length === 1 ? '' : 's') + ' removed'))
+                .catch(err => { console.error(err); showToast('Could not remove broken orders'); });
         }
 
         function completeOrder(id) {
-            const currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
-            const order = currentOrders.find(o => o && o.id === id);
-            if (order) {
-                order.status = 'completed';
-                order.completedAt = new Date().toLocaleString();
-                localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
-                localStorage.setItem('lastOrderUpdate', Date.now().toString());
-                loadData();
-                renderOrders();
-                showToast('Order marked complete');
-            }
+            if (!fsbReady()) return;
+            const { db, doc, updateDoc } = window.FSB;
+            updateDoc(doc(db, 'orders', String(id)), {
+                status: 'completed',
+                completedAt: new Date().toLocaleString()
+            }).then(() => showToast('Order marked complete'))
+              .catch(err => { console.error(err); showToast('Update failed'); });
         }
 
         function reopenOrder(id) {
-            const currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
-            const order = currentOrders.find(o => o && o.id === id);
-            if (order) {
-                order.status = 'pending';
-                delete order.completedAt;
-                localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
-                localStorage.setItem('lastOrderUpdate', Date.now().toString());
-                loadData();
-                renderOrders();
-                showToast('Order reopened');
-            }
+            if (!fsbReady()) return;
+            const { db, doc, updateDoc } = window.FSB;
+            updateDoc(doc(db, 'orders', String(id)), {
+                status: 'pending',
+                completedAt: null
+            }).then(() => showToast('Order reopened'))
+              .catch(err => { console.error(err); showToast('Update failed'); });
         }
 
         function deleteOrder(id) {
-            let currentOrders = JSON.parse(localStorage.getItem('shopOrders')) || [];
-            currentOrders = currentOrders.filter(o => o.id !== id);
-            localStorage.setItem('shopOrders', JSON.stringify(currentOrders));
-            loadData();
-            lastOrderCount = orders.length;
-            renderOrders();
-            showToast('Order deleted');
+            if (!fsbReady()) return;
+            const { db, doc, deleteDoc } = window.FSB;
+            deleteDoc(doc(db, 'orders', String(id)))
+                .then(() => showToast('Order deleted'))
+                .catch(err => { console.error(err); showToast('Delete failed'); });
         }
 
         // Item Management
@@ -2888,47 +2952,27 @@
             }
 
             const wasEditing = !!editingItem;
+            if (!fsbReady()) { showToast('Not connected — try again in a moment'); return; }
+            const { db, doc, setDoc } = window.FSB;
 
-            let currentItems = JSON.parse(localStorage.getItem('shopItems')) || [];
-
+            let itemId, payload;
             if (editingItem) {
-                const itemIndex = currentItems.findIndex(i => i.id === editingItem);
-                if (itemIndex !== -1) {
-                    currentItems[itemIndex] = {
-                        ...currentItems[itemIndex],
-                        name: name,
-                        category: category,
-                        currency: currency,
-                        price: price,
-                        quantity: quantity,
-                        description: description,
-                        inStock: inStock
-                    };
-                }
+                itemId = editingItem;
+                const existing = items.find(i => i.id === editingItem) || {};
+                payload = { ...existing, id: editingItem, name, category, currency, price, quantity, description, inStock };
                 editingItem = null;
                 document.getElementById('formTitle').textContent = 'Add New Item';
                 document.getElementById('saveBtn').textContent = 'Add Item';
                 document.getElementById('cancelBtn').style.display = 'none';
             } else {
-                const newItem = {
-                    id: Date.now(),
-                    name: name,
-                    category: category,
-                    currency: currency,
-                    price: price,
-                    quantity: quantity,
-                    description: description,
-                    inStock: inStock
-                };
-                currentItems.push(newItem);
+                itemId = Date.now();
+                payload = { id: itemId, name, category, currency, price, quantity, description, inStock };
             }
 
-            localStorage.setItem('shopItems', JSON.stringify(currentItems));
-            loadData();
+            setDoc(doc(db, 'items', String(itemId)), payload)
+                .then(() => showToast(wasEditing ? 'Item updated' : 'Item added'))
+                .catch(err => { console.error(err); showToast('Save failed'); });
             clearForm();
-            renderAdminItems();
-            renderItems();
-            showToast(wasEditing ? 'Item updated' : 'Item added');
         }
 
         function editItem(id) {
@@ -2962,13 +3006,11 @@
         }
 
         function deleteItem(id) {
-            let currentItems = JSON.parse(localStorage.getItem('shopItems')) || [];
-            currentItems = currentItems.filter(i => i.id !== id);
-            localStorage.setItem('shopItems', JSON.stringify(currentItems));
-            loadData();
-            renderAdminItems();
-            renderItems();
-            showToast('Item deleted');
+            if (!fsbReady()) return;
+            const { db, doc, deleteDoc } = window.FSB;
+            deleteDoc(doc(db, 'items', String(id)))
+                .then(() => showToast('Item deleted'))
+                .catch(err => { console.error(err); showToast('Delete failed'); });
         }
 
         function clearForm() {
@@ -2981,9 +3023,9 @@
             document.getElementById('itemCurrency').value = 'diamonds';
         }
 
-        // Announcements
+        // Announcements (Firestore doc: config/announcement { text })
         function renderAnnouncement() {
-            const text = (localStorage.getItem('shopAnnouncement') || '').trim();
+            const text = (__announcement || '').trim();
             const bar = document.getElementById('announcementBar');
             const span = document.getElementById('announcementText');
             if (!bar || !span) return;
@@ -2997,32 +3039,36 @@
         }
 
         function updateAnnouncement() {
+            if (!fsbReady()) return;
+            const { db, doc, setDoc } = window.FSB;
             const text = document.getElementById('announceText').value.trim();
-            localStorage.setItem('shopAnnouncement', text);
-            renderAnnouncement();
-            showToast(text ? 'Announcement updated' : 'Announcement cleared');
+            setDoc(doc(db, 'config', 'announcement'), { text })
+                .then(() => showToast(text ? 'Announcement updated' : 'Announcement cleared'))
+                .catch(err => { console.error(err); showToast('Save failed'); });
         }
 
         function clearAnnouncement() {
-            localStorage.removeItem('shopAnnouncement');
+            if (!fsbReady()) return;
+            const { db, doc, setDoc } = window.FSB;
             document.getElementById('announceText').value = '';
-            renderAnnouncement();
-            showToast('Announcement cleared');
+            setDoc(doc(db, 'config', 'announcement'), { text: '' })
+                .then(() => showToast('Announcement cleared'))
+                .catch(err => { console.error(err); showToast('Clear failed'); });
         }
 
-        // ===== Export / Import =====
-        const EXPORT_KEYS = ['shopItems','shopOrders','shopAnnouncement','shopUsers','shopCurrentUser','shopTickets'];
+        // ===== Export / Import (Firestore-backed) =====
         function exportData() {
-            const data = {};
-            EXPORT_KEYS.forEach(k => {
-                const v = localStorage.getItem(k);
-                if (v != null) data[k] = v;
-            });
             const payload = {
                 exportedAt: new Date().toISOString(),
                 source: 'everything-you-need-shop',
-                version: 1,
-                data: data
+                version: 2,
+                data: {
+                    items: items,
+                    orders: orders,
+                    announcement: __announcement,
+                    users: __users,
+                    tickets: __tickets
+                }
             };
             const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -3035,28 +3081,52 @@
             URL.revokeObjectURL(url);
             showToast('Data exported');
         }
-        function importData(input) {
+        async function importData(input) {
             const file = input.files && input.files[0];
             if (!file) return;
+            if (!fsbReady()) { showToast('Not connected — try again in a moment'); return; }
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = async (e) => {
                 try {
                     const parsed = JSON.parse(e.target.result);
-                    const data = parsed && parsed.data ? parsed.data : parsed;
-                    if (!data || typeof data !== 'object') throw new Error('Invalid file');
-                    EXPORT_KEYS.forEach(k => {
-                        if (data[k] != null) localStorage.setItem(k, data[k]);
+                    const wrapper = parsed && parsed.data ? parsed.data : parsed;
+                    if (!wrapper || typeof wrapper !== 'object') throw new Error('Invalid file');
+
+                    // Accept both the v2 (arrays) and the legacy v1 (localStorage key=>JSON string) shapes.
+                    const parseMaybe = (v, fallback) => {
+                        if (v == null) return fallback;
+                        if (typeof v === 'string') { try { return JSON.parse(v); } catch { return fallback; } }
+                        return v;
+                    };
+                    const newItems = parseMaybe(wrapper.items || wrapper.shopItems, []);
+                    const newOrders = parseMaybe(wrapper.orders || wrapper.shopOrders, []);
+                    const newUsers = parseMaybe(wrapper.users || wrapper.shopUsers, []);
+                    const newTickets = parseMaybe(wrapper.tickets || wrapper.shopTickets, []);
+                    const newAnnouncement = (wrapper.announcement != null)
+                        ? wrapper.announcement
+                        : (wrapper.shopAnnouncement != null ? wrapper.shopAnnouncement : '');
+
+                    const { db, doc, setDoc, writeBatch } = window.FSB;
+                    const batch = writeBatch(db);
+                    (Array.isArray(newItems) ? newItems : []).forEach(it => {
+                        if (it && it.id != null) batch.set(doc(db, 'items', String(it.id)), it);
                     });
-                    loadData();
-                    renderItems();
-                    renderOrders();
-                    renderAdminItems();
-                    renderAnnouncement();
-                    renderOwnerTickets();
-                    updateOwnerTicketBadge();
-                    updateAccountUI();
-                    showToast('Data imported — ' + (JSON.parse(data.shopOrders || '[]').length) + ' orders restored');
+                    (Array.isArray(newOrders) ? newOrders : []).forEach(o => {
+                        if (o && o.id != null) batch.set(doc(db, 'orders', String(o.id)), o);
+                    });
+                    (Array.isArray(newUsers) ? newUsers : []).forEach(u => {
+                        if (u && u.username) batch.set(doc(db, 'accounts', u.username.toLowerCase()), u);
+                    });
+                    (Array.isArray(newTickets) ? newTickets : []).forEach(t => {
+                        if (t && t.id != null) batch.set(doc(db, 'tickets', String(t.id)), t);
+                    });
+                    batch.set(doc(db, 'config', 'announcement'), { text: String(newAnnouncement || '') });
+                    // Mark as seeded so the default-seed logic doesn't fire after a restore.
+                    batch.set(doc(db, 'meta', 'seeded'), { seededAt: new Date().toISOString() });
+                    await batch.commit();
+                    showToast('Data imported — ' + (Array.isArray(newOrders) ? newOrders.length : 0) + ' orders restored');
                 } catch (err) {
+                    console.error(err);
                     showToast('Import failed: ' + err.message, 4000);
                 }
                 input.value = '';
@@ -3102,9 +3172,8 @@
             ['ncOwX','ncOwY','ncOwZ','ncNetX','ncNetY','ncNetZ'].forEach(id => document.getElementById(id).value = '');
         }
 
-        // ===== Accounts =====
-        function getUsers() { return JSON.parse(localStorage.getItem('shopUsers') || '[]'); }
-        function saveUsers(list) { localStorage.setItem('shopUsers', JSON.stringify(list)); }
+        // ===== Accounts (users live in Firestore; current-user session stays per-device) =====
+        function getUsers() { return Array.isArray(__users) ? __users : []; }
         function getCurrentUser() { return localStorage.getItem('shopCurrentUser') || null; }
         function setCurrentUser(u) {
             if (u) localStorage.setItem('shopCurrentUser', u);
@@ -3161,17 +3230,22 @@
             if (p.length < 4) { err.textContent = 'Password must be at least 4 characters'; return; }
             if (p !== p2) { err.textContent = 'Passwords do not match'; return; }
             if (u.toLowerCase() === 'owner21') { err.textContent = 'That username is reserved'; return; }
+            if (!fsbReady()) { err.textContent = 'Not connected — try again in a moment'; return; }
             const users = getUsers();
             if (users.some(x => x.username.toLowerCase() === u.toLowerCase())) {
                 err.textContent = 'Username already taken';
                 return;
             }
-            users.push({ username: u, password: p, createdAt: new Date().toISOString() });
-            saveUsers(users);
-            setCurrentUser(u);
-            closeAccount();
-            showToast('Account created — signed in as ' + u);
-            renderUserTickets();
+            const { db, doc, setDoc } = window.FSB;
+            const userObj = { username: u, password: p, createdAt: new Date().toISOString() };
+            setDoc(doc(db, 'accounts', u.toLowerCase()), userObj)
+                .then(() => {
+                    setCurrentUser(u);
+                    closeAccount();
+                    showToast('Account created — signed in as ' + u);
+                    renderUserTickets();
+                })
+                .catch(e2 => { err.textContent = 'Signup failed: ' + e2.message; });
         }
         function acctLogin() {
             const u = document.getElementById('acctLoginUser').value.trim();
@@ -3192,7 +3266,7 @@
             showToast('Signed out');
         }
 
-        // ===== Tickets =====
+        // ===== Tickets (Firestore-backed) =====
         const ticketDrafts = {}; // { ticketId: draftText } — preserves in-progress replies across re-renders
         function harvestTicketDrafts() {
             document.querySelectorAll('textarea[id^="reply-"]').forEach(ta => {
@@ -3206,10 +3280,16 @@
                 if (ticketDrafts[id] != null) ta.value = ticketDrafts[id];
             });
         }
-        function getTickets() { return JSON.parse(localStorage.getItem('shopTickets') || '[]'); }
-        function saveTickets(list) {
-            localStorage.setItem('shopTickets', JSON.stringify(list));
-            localStorage.setItem('shopTicketsUpdate', Date.now().toString());
+        function getTickets() { return Array.isArray(__tickets) ? __tickets : []; }
+        function fsSaveTicket(ticket) {
+            if (!fsbReady()) return Promise.reject(new Error('Not connected'));
+            const { db, doc, setDoc } = window.FSB;
+            return setDoc(doc(db, 'tickets', String(ticket.id)), ticket);
+        }
+        function fsDeleteTicket(id) {
+            if (!fsbReady()) return Promise.reject(new Error('Not connected'));
+            const { db, doc, deleteDoc } = window.FSB;
+            return deleteDoc(doc(db, 'tickets', String(id)));
         }
         function openTickets() {
             const user = getCurrentUser();
@@ -3302,8 +3382,7 @@
             const message = document.getElementById('newTicketMsg').value.trim();
             if (!subject) { showToast('Subject is required'); return; }
             if (!message) { showToast('Message is required'); return; }
-            const tickets = getTickets();
-            tickets.unshift({
+            const ticket = {
                 id: Date.now(),
                 user: user,
                 subject: subject,
@@ -3315,14 +3394,12 @@
                     text: message,
                     time: new Date().toLocaleString()
                 }]
-            });
-            saveTickets(tickets);
-            document.getElementById('newTicketSubject').value = '';
-            document.getElementById('newTicketMsg').value = '';
-            renderUserTickets();
-            if (document.getElementById('ownerPanel').classList.contains('active')) renderOwnerTickets();
-            updateOwnerTicketBadge();
-            showToast('Ticket submitted');
+            };
+            fsSaveTicket(ticket).then(() => {
+                document.getElementById('newTicketSubject').value = '';
+                document.getElementById('newTicketMsg').value = '';
+                showToast('Ticket submitted');
+            }).catch(err => { console.error(err); showToast('Submit failed'); });
         }
         function userReplyTicket(id) {
             const user = getCurrentUser();
@@ -3330,49 +3407,38 @@
             const el = document.getElementById('reply-' + id);
             const text = el.value.trim();
             if (!text) { showToast('Type a reply first'); return; }
-            const tickets = getTickets();
-            const t = tickets.find(x => x.id === id);
+            const t = getTickets().find(x => x.id === id);
             if (!t || t.user !== user) return;
-            t.messages.push({ from: user, isOwner: false, text: text, time: new Date().toLocaleString() });
-            if (t.status === 'closed') t.status = 'open';
+            const updated = {
+                ...t,
+                status: 'open',
+                messages: [...(t.messages || []), { from: user, isOwner: false, text, time: new Date().toLocaleString() }]
+            };
             delete ticketDrafts[id];
-            saveTickets(tickets);
-            renderUserTickets();
-            if (document.getElementById('ownerPanel').classList.contains('active')) renderOwnerTickets();
-            updateOwnerTicketBadge();
+            fsSaveTicket(updated).catch(err => { console.error(err); showToast('Reply failed'); });
         }
         function ownerReplyTicket(id) {
             const el = document.getElementById('reply-' + id);
             const text = el.value.trim();
             if (!text) { showToast('Type a reply first'); return; }
-            const tickets = getTickets();
-            const t = tickets.find(x => x.id === id);
+            const t = getTickets().find(x => x.id === id);
             if (!t) return;
-            t.messages.push({ from: '', isOwner: true, text: text, time: new Date().toLocaleString() });
+            const updated = {
+                ...t,
+                messages: [...(t.messages || []), { from: '', isOwner: true, text, time: new Date().toLocaleString() }]
+            };
             delete ticketDrafts[id];
-            saveTickets(tickets);
-            renderOwnerTickets();
-            renderUserTickets();
-            updateOwnerTicketBadge();
+            fsSaveTicket(updated).catch(err => { console.error(err); showToast('Reply failed'); });
         }
         function setTicketStatus(id, status) {
-            const tickets = getTickets();
-            const t = tickets.find(x => x.id === id);
+            const t = getTickets().find(x => x.id === id);
             if (!t) return;
-            t.status = status;
-            saveTickets(tickets);
-            renderOwnerTickets();
-            renderUserTickets();
-            updateOwnerTicketBadge();
-            showToast('Ticket ' + status);
+            fsSaveTicket({ ...t, status }).then(() => showToast('Ticket ' + status))
+                .catch(err => { console.error(err); showToast('Update failed'); });
         }
         function deleteTicket(id) {
-            let tickets = getTickets().filter(x => x.id !== id);
-            saveTickets(tickets);
-            renderOwnerTickets();
-            renderUserTickets();
-            updateOwnerTicketBadge();
-            showToast('Ticket deleted');
+            fsDeleteTicket(id).then(() => showToast('Ticket deleted'))
+                .catch(err => { console.error(err); showToast('Delete failed'); });
         }
         function renderOwnerTickets() {
             const listEl = document.getElementById('ownerTicketsList');
@@ -3399,19 +3465,9 @@
             else { badge.style.display = 'none'; }
         }
 
-        // Cross-tab sync for tickets (skip re-render if user is typing a reply —
-        // drafts are preserved anyway, but avoiding the flash is nicer)
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'shopTickets' || e.key === 'shopTicketsUpdate') {
-                const typing = document.activeElement && document.activeElement.tagName === 'TEXTAREA'
-                    && /^reply-/.test(document.activeElement.id);
-                if (!typing) {
-                    if (document.getElementById('ticketsOverlay').classList.contains('active')) renderUserTickets();
-                    if (document.getElementById('ownerPanel').classList.contains('active')) renderOwnerTickets();
-                }
-                updateOwnerTicketBadge();
-            }
-        });
+        // Cross-device sync for tickets is handled by the Firestore onSnapshot listener
+        // in setupFirestoreListeners(). Reply drafts are preserved across re-renders via
+        // harvestTicketDrafts/restoreTicketDrafts.
 
         // Close overlays on escape
         document.addEventListener('keydown', (e) => {
